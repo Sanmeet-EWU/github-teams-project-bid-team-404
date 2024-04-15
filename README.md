@@ -1,5 +1,6 @@
 # BiteShare
 ![Logo](https://github.com/Sanmeet-EWU/github-teams-project-bid-team-404/assets/95836306/4b73fbe1-dd64-4f41-a0df-1101aad9cb8c)
+
 Welcome to BiteShare, the community-driven platform for sharing and discovering recipes from around the globe. BiteShare connects food lovers of all skill levels to create, collaborate, and exchange culinary ideas. Our aim is to enrich the culinary experience through a vibrant social media approach, promoting the best recipes through community engagement.
 
 ## Table of Contents
