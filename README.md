@@ -24,7 +24,7 @@ BiteShare is more than just a recipe site; it's a place where cooks can share th
 ## Tech Stack
 
 - **Front End**: Developed with [Astro](https://astro.build/), ensuring a fast and modern user experience.
-- **Back End**: Powered by [Spring Boot](https://spring.io/projects/spring-boot) for a robust and scalable application.
-- **Database**: Choice of [MySQL](https://www.mysql.com/) or [MongoDB](https://www.mongodb.com/) for efficient data management.
+- **Back End**: Powered by [Spring Boot](https://spring.io/projects/spring-boot) for a robust and scalable application.(Maybe dont need?)
+- **Database**: Choice of [Firebase](https://firebase.google.com/) for efficient data management.
 - **Design**: Prototyping with [Figma](https://www.figma.com/) for a collaborative design approach.
 - **Deployment**: Static assets hosted on [Netlify](https://www.netlify.com/) for optimized delivery.
