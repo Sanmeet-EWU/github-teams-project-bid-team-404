@@ -18,7 +18,7 @@ public class Recipe {
 
     public Recipe(String name, String cuisineType, String cookTime, ArrayList<Ingredient> ingredients, ArrayList<String> directions) {
         this.name = name;
-        this.date = new SimpleDateFormat("MM/dd/yy'at' HH:mm z").format(Calendar.getInstance().getTime());;
+        this.date = new SimpleDateFormat("MM/dd/yy 'at' HH:mm z").format(Calendar.getInstance().getTime());;
         this.cuisineType = cuisineType;
         this.cookTime = cookTime;
         this.ingredients = ingredients;
