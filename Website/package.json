@@ -1,21 +1,13 @@
 {
-  "name": "",
-  "type": "module",
+  "name": "my-astro-project",
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
-    "start": "astro dev",
     "build": "astro build",
-    "preview": "astro preview",
-    "astro": "astro"
+    "start": "astro preview"
   },
   "dependencies": {
-    "@astrojs/mdx": "^3.0.0",
-    "@astrojs/rss": "^4.0.6",
-    "@astrojs/sitemap": "^3.1.4",
-    "astro": "^4.8.6",
-    "firebase": "^10.12.1",
-    "firebase-admin": "^12.1.0",
-    "firebase-functions": "^5.0.1"
+    "astro": "^1.0.0",
+    "firebase": "^9.0.0"
   }
 }
