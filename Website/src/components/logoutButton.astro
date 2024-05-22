@@ -1,0 +1,16 @@
+---
+import { logout } from '../auth';
+const handleLogout = async () => {
+  await logout();
+  window.location.href = '/login';
+};
+---
+
+<button onclick="handleLogout()">Logout</button>
+
+<script>
+  const handleLogout = async () => {
+    await fetch('/api/logout', { method: 'POST' });
+    window.location.href = '/login';
+  };
+</script>
