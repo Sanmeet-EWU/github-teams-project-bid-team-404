@@ -25,7 +25,7 @@ public class Ingredient {
         this.name = name;
     }
 
-    public float getQuantity() {
+    public double getQuantity() {
         return this.quantity;
     }
 

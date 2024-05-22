@@ -1,5 +1,8 @@
 package javaclasses;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Comment {
 
     private int voteCount;
@@ -17,6 +20,15 @@ public class Comment {
         this.voteCount = 0;
         this.author = author;
         this.comments = new ArrayList<>();
+    }
+    
+
+    public void upVote() {
+        voteCount++;
+    }
+
+    public void downVote() {
+        voteCount--;
     }
 
 
@@ -45,12 +57,12 @@ public class Comment {
         return comments;
     }
 
-    public void setComments(List<Comments> comments){
+    public void setComments(List<Comment> comments){
         this.comments = comments;
     }
 
     public void addComment(Comment comment){
-        this.comments.add(comment)
+        this.comments.add(comment);
     }
 
     public String toString(){
