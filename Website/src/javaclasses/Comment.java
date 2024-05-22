@@ -2,34 +2,23 @@ package javaclasses;
 
 public class Comment {
 
-    private int likeCount;//TODO: Shoud these be one combined count that can be positive of negative?
-    private int dislikeCount;
-
+    private int voteCount;
     private String text;
 
  
     public Comment(String text) {
-        
+        this.text = text;//Do we need a char limit?
+        this.voteCount = 0;
     }
-
-
 
 
 //Getters and Setters
-    public int getLikeCount() {
-        return this.likeCount;
+    public int getVoteCount() {
+        return this.voteCount;
     }
 
-    public void setLikeCount(int likeCount) {
-        this.likeCount = likeCount;
-    }
-
-    public int getDislikeCount() {
-        return this.dislikeCount;
-    }
-
-    public void setDislikeCount(int dislikeCount) {
-        this.dislikeCount = dislikeCount;
+    public void setVoteCount(int voteCount) {
+        this.voteCount = voteCount;
     }
 
     public String getText() {
