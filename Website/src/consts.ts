@@ -3,4 +3,3 @@
 
 export const SITE_TITLE = 'BiteShare';
 export const SITE_DESCRIPTION = 'Welcome to my website!';
-
