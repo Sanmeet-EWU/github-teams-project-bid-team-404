@@ -3,6 +3,8 @@ import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import { fetchRecipes } from '../dataFetch'; // Ensure the path is correct
+const recipes = await fetchRecipes();
 ---
 
 <!doctype html>
@@ -12,6 +14,12 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 	</head>
 	<body>
 		<Header />
+		
+<ul>
+	{recipes.map((recipe) => (
+	  <li>{recipe.name}</li>
+	))}
+  </ul>
 		<main>
 			<h1>🧑‍🚀 Hello, Astronaut!</h1>
 			<p>
