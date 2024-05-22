@@ -3,12 +3,16 @@ package javaclasses;
 public class Ingredient {
 
     private String name;
-    private float amount;//needs unit, probaby make an enum
+    private double quantity;//needs unit, probaby make an enum
+    private String unit;
     //Should allergies be stored here?
 
-    public Ingredient(String name, float amount) {
+    public Ingredient() {}
+
+    public Ingredient(String name, double quantity, String unit) {
         this.name = name;
-        this.amount = amount;
+        this.quantity = quantity;
+        this.unit = unit;
     }
 
 
@@ -21,12 +25,16 @@ public class Ingredient {
         this.name = name;
     }
 
-    public float getAmount() {
-        return this.amount;
+    public float getQuantity() {
+        return this.quantity;
     }
 
-    public void setAmount(float amount) {
-        this.amount = amount;
+    public void setQuantity(double quantity) {
+        this.quantity = quantity;
+    }
+
+    public String toString(){
+        return "Ingredient - " + name + ", Quantity - " + quantity + ", Measurement - " + unit;
     }
 
 }

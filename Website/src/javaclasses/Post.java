@@ -5,13 +5,17 @@ import java.util.ArrayList;
 public class Post {
 
     private String title;//title of the post (name)
-    private String author;//username of who created post
+    private User author;//username of who created post
     private int voteCount;//up/down vote
     private Recipe recipe;
-    private ArrayList<Comment> comments;
+    private List<Comment> comments;
 
-    
-    public Post(String title, String author, Recipe recipe) {
+    public Post(){
+        this.voteCount = 0;
+        this.comments = new ArrayList<>();
+    }
+
+    public Post(String title, User author, int voteCount, Recipe recipe, List<Comment> comments) {
         this.title = title;
         this.author = author;
         this.voteCount = 0;
@@ -62,4 +66,17 @@ public class Post {
         this.comments = comments;
     }
 
+    public void addComment(Comment comment){
+        this.comments.add(comment);
+    }
+
+    public String toString(){
+        return "Post{" +
+                "title='" + title + '\'' +
+                ", author=" + author +
+                ", voteCount=" + voteCount +
+                ", recipe=" + recipe +
+                ", comments=" + comments +
+                '}';
+    }
 }
