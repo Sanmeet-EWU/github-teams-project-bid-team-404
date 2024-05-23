@@ -2,31 +2,13 @@
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { fetchRecipes } from '../dataFetch';
-import "../styles/home.css"
+import BaseHead from '../components/BaseHead.astro';
 
-interface Recipe {
-  Author: string;
-  Title: string;
-  Image: string;
-  Subtitle: string;
-}
-
-let recipes: Recipe[] = [];
-
-try {
-  recipes = await fetchRecipes();
-} catch (error) {
-  console.error("Failed to fetch recipes:", error);
-}
+let recipes = await fetchRecipes();
 ---
 
 <html lang="en">
-<head>
-  <link rel="stylesheet" href="/styles/global.css">
-  <link rel="stylesheet" href="/styles/home.css">
-  <link rel="stylesheet" href="/styles/header.css">
-  <link rel="stylesheet" href="/styles/footer.css">
-</head>
+<BaseHead />
 <body>
   <Header />
   <main class="home-main">
@@ -37,14 +19,9 @@ try {
           <article class="recipe-card">
             <img src={recipe.Image} alt={recipe.Title} class="recipe-image" />
             <div class="recipe-content">
-              <h2><a href={`/recipes/${recipe.Title.toLowerCase().replace(/\s+/g, '-')}`}>{recipe.Title}</a></h2>
+              <h2><a href={`/recipes/${recipe.Slug}`}>{recipe.Title}</a></h2>
               <p>Chef {recipe.Author}</p>
               <p>{recipe.Subtitle}</p>
-              <div class="recipe-votes">
-                <button><img src="../../images/up.png" alt="Up arrow"></button>
-                <span>0</span>
-                <button><img src="../../images/down.png" alt="Down arrow"></button>
-              </div>
             </div>
           </article>
         ))

@@ -37,5 +37,5 @@ export async function fetchRecipes() {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
-
-export { db, auth, app };
+export default app;
+export { db, auth};

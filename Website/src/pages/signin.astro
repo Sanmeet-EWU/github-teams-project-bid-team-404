@@ -2,6 +2,7 @@
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import BaseHead from '../components/BaseHead.astro';
+import "../styles/auth.css";
 ---
 
 <html lang="en">
@@ -18,13 +19,14 @@ import BaseHead from '../components/BaseHead.astro';
         <input type="password" id="signInPassword" required />
         <button type="submit">Sign In</button>
         <p class="error" id="signInErrorMessage"></p>
+        <p>Don't have an account? <a href="/signup">Sign Up</a></p>
       </form>
     </div>
   </main>
   <Footer />
-  <script type="module" src="/src/auth.js"></script>
+  <script type="module" src="/public/scripts/auth.js"></script>
   <script type="module">
-    import { signIn } from '../../public/auth';// Ensure this import is correct
+    import { signIn } from '/public/auth.js';
 
     const handleSignIn = async (event) => {
       event.preventDefault();
@@ -34,6 +36,7 @@ import BaseHead from '../components/BaseHead.astro';
         const user = await signIn(email, password);
         console.log('Signed in successfully:', user);
         document.getElementById('signInErrorMessage').textContent = '';
+        window.location.href = '/';
       } catch (error) {
         document.getElementById('signInErrorMessage').textContent = error.message;
       }

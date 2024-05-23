@@ -2,6 +2,7 @@
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import { fetchRecipes } from '../../dataFetch';
+import BaseHead from '../../components/BaseHead.astro';
 import "../../styles/post.css";
 
 interface Recipe {
@@ -15,6 +16,7 @@ interface Recipe {
   CookTime: string;
   Servings: string;
   Slug: string;
+  Subtitle: string; // Add Subtitle field
 }
 
 export async function getStaticPaths() {
@@ -34,10 +36,7 @@ if (!recipe) {
 ---
 
 <html lang="en">
-<head>
-  <link rel="stylesheet" href="/styles/global.css">
-  <link rel="stylesheet" href="/styles/post.css">
-</head>
+<BaseHead />
 <body>
   <Header />
   <main class="post-main">
@@ -74,54 +73,3 @@ if (!recipe) {
   <Footer />
 </body>
 </html>
-
-<style>
-/* Add styles to match your design */
-.post-main {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-.post-meta {
-  display: flex;
-  justify-content: space-around;
-  margin-bottom: 20px;
-}
-
-.post-image {
-  width: 100%;
-  height: auto;
-  margin-bottom: 20px;
-}
-
-.post-content {
-  display: flex;
-  justify-content: space-between;
-}
-
-.post-directions, .post-ingredients {
-  width: 48%;
-}
-
-.post-tags {
-  margin-top: 20px;
-}
-
-.tags {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.tag {
-  background: #242c26;
-  color: white;
-  padding: 5px 10px;
-  border-radius: 5px;
-}
-
-.post-votes, .post-comments, .post-suggestions {
-  margin-top: 20px;
-}
-</style>

@@ -1,28 +1,30 @@
 ---
 import '../styles/header.css';
-import '../styles/global.css'
+import '../styles/global.css';
 ---
+
 <header>
-<div class="headerWrapper">
-	<div class="header">
-	  <div class="header-container">
-		<div class="logo">
-			<img src="/images/Logo.png" alt="Biteshare Logo">
-		</div>
-		<nav class="nav">
-		  <ul class="nav-list">
-			<li><a href="/">Home</a></li>
-			<li><a href="/profile">Profile</a></li>
-			<li><a href="/contact">Contact</a></li>
-			<li><a href="/browse">Browse</a></li>
-		  </ul>
-		</nav>
-		<button class="create-post">+ Create Post</button>
-		<div class="auth">
-		  <button class="auth-button">Sign In/Sign Up</button>
-		</div>
-		</div>
-	</div>
-	<div class="green-bar"></div>
+  <div class="headerWrapper">
+    <div class="header">
+      <div class="header-container">
+        <div class="logo">
+          <a href="/"><img src="/images/Logo.png" alt="Biteshare Logo"></a>
+        </div>
+        <nav class="nav">
+          <ul class="nav-list">
+            <li><a href="/">Home</a></li>
+            <li><a href="/profile">Profile</a></li>
+            <li><a href="/contact">Contact</a></li>
+            <li><a href="/browse">Browse</a></li>
+          </ul>
+        </nav>
+        <button class="create-post" id="create-post"> <a href="/createPost" class="create-post">+ Create Post</a></button>
+        <div class="auth" id="auth-container">
+          <a href="/signin" id="signin-signup-link" class="auth-button">Sign In/Sign Up</a>
+          <button id="signout-button" class="auth-button" style="display: none;">Sign Out</button>
+        </div>
+      </div>
+    </div>
+    <div class="green-bar"></div>
   </div>
 </header>

@@ -1,17 +1,26 @@
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from './firebaseConfig';
 
-function generateSlug(title) {
-  return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
-}
-
 export async function fetchRecipes() {
-  const querySnapshot = await getDocs(collection(db, "recipes"));
-  return querySnapshot.docs.map((doc) => {
+  const querySnapshot = await getDocs(collection(db, 'recipes'));
+  const recipes = [];
+  querySnapshot.forEach((doc) => {
     const data = doc.data();
-    return {
-      ...data,
-      Slug: generateSlug(data.Title),
-    };
+    console.log('Fetched document data:', data); // Log each document data
+    recipes.push({
+      Author: data.Author,
+      Title: data.Title,
+      Image: data.Image,
+      Instructions: data.Instructions,
+      Ingredients: data.Ingredients,
+      Tags: data.Tags,
+      PrepTime: data.PrepTime,
+      CookTime: data.CookTime,
+      Servings: data.Servings,
+      Slug: data.Slug,
+      Subtitle: data.Subtitle // Add Subtitle field
+    });
   });
+  console.log('Fetched recipes:', recipes); // Log all recipes fetched
+  return recipes;
 }
