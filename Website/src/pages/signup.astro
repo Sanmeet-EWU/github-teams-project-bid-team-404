@@ -1,0 +1,45 @@
+---
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import BaseHead from '../components/BaseHead.astro';
+---
+
+<html lang="en">
+<BaseHead />
+<body>
+  <Header />
+  <main class="auth-main">
+    <h1>Sign Up</h1>
+    <div class="auth-container">
+      <form class="auth-form" onsubmit="handleSignUp(event)">
+        <label for="signUpEmail">Email Address</label>
+        <input type="email" id="signUpEmail" required />
+        <label for="signUpPassword">Password</label>
+        <input type="password" id="signUpPassword" required />
+        <button type="submit">Sign Up</button>
+        <p class="error" id="signUpErrorMessage"></p>
+      </form>
+    </div>
+  </main>
+  <Footer />
+  <script type="module" src="/public/auth.js"></script>
+  <script type="module">
+    import { signUp } from '../../public/auth'; // Ensure this import is correct
+
+    const handleSignUp = async (event) => {
+      event.preventDefault();
+      const email = document.getElementById('signUpEmail').value;
+      const password = document.getElementById('signUpPassword').value;
+      try {
+        const user = await signUp(email, password);
+        console.log('Signed up successfully:', user);
+        document.getElementById('signUpErrorMessage').textContent = '';
+      } catch (error) {
+        document.getElementById('signUpErrorMessage').textContent = error.message;
+      }
+    };
+
+    document.querySelector('form[onsubmit="handleSignUp(event)"]').onsubmit = handleSignUp;
+  </script>
+</body>
+</html>
