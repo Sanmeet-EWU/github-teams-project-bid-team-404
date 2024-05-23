@@ -1,20 +1,17 @@
-// src/dataFetch.js
-import { getCollection } from 'astro:content';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from './firebaseConfig';
+
+function generateSlug(title) {
+  return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+}
 
 export async function fetchRecipes() {
-  const posts = await getCollection('recipes');
-  return posts.map((post) => ({
-    ...post,
-    data: {
-      ...post.data,
-      servings: post.data.servings || '',
-      prepTime: post.data.prepTime || '',
-      cookTime: post.data.cookTime || '',
-      directions: post.data.directions || '',
-      ingredients: post.data.ingredients || '',
-      tags: post.data.tags || [],
-      comments: post.data.comments || [],
-      suggestions: post.data.suggestions || []
-    }
-  }));
+  const querySnapshot = await getDocs(collection(db, "recipes"));
+  return querySnapshot.docs.map((doc) => {
+    const data = doc.data();
+    return {
+      ...data,
+      Slug: generateSlug(data.Title),
+    };
+  });
 }

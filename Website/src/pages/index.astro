@@ -2,45 +2,50 @@
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { fetchRecipes } from '../dataFetch';
-import type { RecipePost } from '../../types';
 import "../styles/home.css"
 
-interface Post {
-  id: string;
-  slug: string;
-  body: string;
-  collection: string;
-  data: RecipePost;
+interface Recipe {
+  Author: string;
+  Title: string;
+  Image: string;
+  Subtitle: string;
 }
 
-const posts: Post[] = await fetchRecipes();
+let recipes: Recipe[] = [];
+
+try {
+  recipes = await fetchRecipes();
+} catch (error) {
+  console.error("Failed to fetch recipes:", error);
+}
 ---
 
 <html lang="en">
 <head>
+  <link rel="stylesheet" href="/styles/global.css">
+  <link rel="stylesheet" href="/styles/home.css">
 </head>
 <body>
   <Header />
   <main class="home-main">
     <h1>Hot Recipes</h1>
     <section class="recipes-section">
-      {posts.map((post) => (
-        <article class="recipe-card">
-          <a href={`/recipes/${post.slug}`}>
-            <img src={post.data.image} alt={post.data.title} class="recipe-image" />
+      {recipes.length > 0 ? (
+        recipes.map((recipe) => (
+          <a href={`/recipes/${recipe.Slug}`} class="recipe-link"> <!-- Link to the dynamic route -->
+            <article class="recipe-card">
+              <img src={recipe.Image} alt={recipe.Title} class="recipe-image" />
+              <div class="recipe-content">
+                <h2>{recipe.Title}</h2>
+                <p>Chef {recipe.Author}</p>
+                <p>{recipe.Subtitle}</p>
+              </div>
+            </article>
           </a>
-          <div class="recipe-content">
-            <h2><a href={`/recipes/${post.slug}`}>{post.data.title}</a></h2>
-            <p>Chef {post.data.author}</p>
-            <p>{post.data.excerpt}</p>
-            <div class="recipe-votes">
-              <button><img src="../../images/up.png" alt="Up arrow"></button>
-              <span>0</span>
-              <button><img src="../../images/down.png" alt="Down arrow"></button>
-            </div>
-          </div>
-        </article>
-      ))}
+        ))
+      ) : (
+        <p>No recipes found.</p>
+      )}
     </section>
   </main>
   <Footer />

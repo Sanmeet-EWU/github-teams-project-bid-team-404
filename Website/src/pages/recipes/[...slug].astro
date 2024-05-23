@@ -1,0 +1,49 @@
+---
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { fetchRecipes } from '../../dataFetch';
+import "../../styles/post.css";
+
+interface Recipe {
+  Author: string;
+  Title: string;
+  Image: string;
+  Subtitle: string;
+  Instructions: string;
+  Slug: string;
+}
+
+export async function getStaticPaths() {
+  const recipes: Recipe[] = await fetchRecipes();
+  return recipes.map((recipe) => ({
+    params: { slug: recipe.Slug }
+  }));
+}
+
+const { slug } = Astro.params;
+const recipes: Recipe[] = await fetchRecipes();
+const recipe = recipes.find((r) => r.Slug === slug);
+
+if (!recipe) {
+  throw new Error(`Recipe not found for slug: ${slug}`);
+}
+---
+
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="/styles/global.css">
+  <link rel="stylesheet" href="/styles/post.css">
+</head>
+<body>
+  <Header />
+  <main class="post-main">
+    <h1>{recipe.Title}</h1>
+    <img src={recipe.Image} alt={recipe.Title} class="post-image" />
+    <p>Chef {recipe.Author}</p>
+    <p>{recipe.Subtitle}</p>
+    <h2>Instructions</h2>
+    <p>{recipe.Instructions}</p>
+  </main>
+  <Footer />
+</body>
+</html>
