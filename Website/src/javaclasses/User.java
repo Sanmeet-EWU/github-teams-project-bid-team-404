@@ -42,7 +42,7 @@ public class User {
 
     public String toString(){
         return "User{" +
-                "email='" + email '\'' +
+                "email='" + email + '\'' +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 '}';

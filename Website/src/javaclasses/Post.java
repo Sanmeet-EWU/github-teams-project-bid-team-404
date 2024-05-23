@@ -1,6 +1,7 @@
 package javaclasses;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Post {
 
@@ -12,7 +13,7 @@ public class Post {
 
     public Post(){
         this.voteCount = 0;
-        this.comments = new ArrayList<>();
+        this.comments = new ArrayList<Comment>();
     }
 
     public Post(String title, User author, int voteCount, Recipe recipe, List<Comment> comments) {
@@ -23,7 +24,13 @@ public class Post {
         this.comments = new ArrayList<Comment>();
     }
 
+    public void upVote() {
+        voteCount++;
+    }
 
+    public void downVote() {
+        voteCount--;
+    }
 
     //Getters and Setters
     public String getTitle() {
@@ -34,11 +41,11 @@ public class Post {
         this.title = title;
     }
 
-    public String getAuthor() {
+    public User getAuthor() {
         return this.author;
     }
 
-    public void setAuthor(String author) {
+    public void setAuthor(User author) {
         this.author = author;
     }
 
@@ -58,7 +65,7 @@ public class Post {
         this.recipe = recipe;
     }
 
-    public ArrayList<Comment> getComments() {
+    public List<Comment> getComments() {
         return this.comments;
     }
 
