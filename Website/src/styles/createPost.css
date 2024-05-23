@@ -1,11 +1,11 @@
 .create-post-main {
-    max-width: 800px;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
   }
   
   .create-post-container {
-    background-color: #f9f9f9;
+    background-color: #8A6340;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
