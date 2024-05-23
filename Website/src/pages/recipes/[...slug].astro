@@ -8,8 +8,12 @@ interface Recipe {
   Author: string;
   Title: string;
   Image: string;
-  Subtitle: string;
   Instructions: string;
+  Ingredients: string[];
+  Tags: string[];
+  PrepTime: string;
+  CookTime: string;
+  Servings: string;
   Slug: string;
 }
 
@@ -38,12 +42,86 @@ if (!recipe) {
   <Header />
   <main class="post-main">
     <h1>{recipe.Title}</h1>
+    <div class="post-meta">
+      <span class="servings">Serves: {recipe.Servings}</span>
+      <span class="prep-time">Prep Time: {recipe.PrepTime}</span>
+      <span class="cook-time">Cook Time: {recipe.CookTime}</span>
+    </div>
     <img src={recipe.Image} alt={recipe.Title} class="post-image" />
-    <p>Chef {recipe.Author}</p>
-    <p>{recipe.Subtitle}</p>
-    <h2>Instructions</h2>
-    <p>{recipe.Instructions}</p>
+    <div class="post-content">
+      <div class="post-directions">
+        <h2>Directions:</h2>
+        <p>{recipe.Instructions}</p>
+      </div>
+      <div class="post-ingredients">
+        <h2>Ingredients:</h2>
+        <ul>
+          {recipe.Ingredients.map(ingredient => (
+            <li>{ingredient}</li>
+          ))}
+        </ul>
+      </div>
+    </div>
+    <div class="post-tags">
+      <h3>Tags</h3>
+      <div class="tags">
+        {recipe.Tags.map(tag => (
+          <span class="tag">{tag}</span>
+        ))}
+      </div>
+    </div>
   </main>
   <Footer />
 </body>
 </html>
+
+<style>
+/* Add styles to match your design */
+.post-main {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.post-meta {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+}
+
+.post-image {
+  width: 100%;
+  height: auto;
+  margin-bottom: 20px;
+}
+
+.post-content {
+  display: flex;
+  justify-content: space-between;
+}
+
+.post-directions, .post-ingredients {
+  width: 48%;
+}
+
+.post-tags {
+  margin-top: 20px;
+}
+
+.tags {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.tag {
+  background: #242c26;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.post-votes, .post-comments, .post-suggestions {
+  margin-top: 20px;
+}
+</style>

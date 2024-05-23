@@ -1,108 +1,27 @@
-/* home.css */
-
-/* Container to center and set max-width for the content */
-.container {
-  max-width: 1200px; /* Adjust max-width as needed */
-  margin: 0 auto; /* Center the container */
-  padding: 0 20px; /* Add some padding */
-}
-
-/* Header styles */
-.header-wrapper {
-  width: 100%;
-  background-color: #8A6340; /* Adjust to match the screenshot */
-}
-
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.home-main {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 10px 20px;
+  padding: 20px;
 }
 
-.logo {
+.recipes-section {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  gap: 20px;
 }
 
-.logo-img {
-  height: 60px; /* Adjust the height as needed */
-  width: auto; /* Keep the aspect ratio */
-}
-
-.nav .nav-list {
-  display: flex;
-  align-items: center;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.nav .nav-list li {
-  margin-right: 15px; /* Reduce spacing between nav items */
-}
-
-.nav .nav-list li a {
-  color: white;
-  text-decoration: none;
-  font-size: 1.2em; /* Increase font size */
-}
-
-.create-post {
-  background-color: #14902A; /* Green color for the Create Post button */
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.search-container {
-  display: flex;
-  align-items: center;
-}
-
-.search-input {
-  padding: 5px;
-  border: none;
-  border-radius: 3px;
-}
-
-.search-button {
-  background-color: white;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 3px;
-  margin-left: 5px;
-  cursor: pointer;
-}
-
-.auth .auth-button {
-  background-color: #14902A; /* Green color for the Sign In/Sign Up button */
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-/* Adjust the width of the recipe cards */
 .recipe-card {
   display: flex;
-  background-color: #14902A; /* Green background color */
+  background-color: #14902A; /* Green background for the recipe card */
   border-radius: 8px;
   overflow: hidden;
-  width: 100%;
-  max-width: 800px; /* Increased max-width */
-  margin: 20px auto; /* Center the cards and add spacing between them */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  color: white;
 }
 
-/* Additional styles for better layout */
 .recipe-image {
-  width: 150px; /* Adjust width if needed */
-  height: 150px;
+  width: 200px;
+  height: auto;
   object-fit: cover;
 }
 
@@ -114,83 +33,23 @@
   width: 100%;
 }
 
-.recipe-content h2 {
-  margin: 0;
+.recipe-content h2 a {
+  color: white;
+  text-decoration: none;
+}
+
+.recipe-content p {
+  margin: 5px 0;
 }
 
 .recipe-votes {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 10px;
 }
 
 .recipe-votes button {
-  background-color: transparent;
+  background: none;
   border: none;
-  color: white;
   cursor: pointer;
-}
-
-.recipe-votes span {
-  font-size: 16px;
-}
-
-/* Ensure the links have appropriate styles */
-.recipe-link {
-  text-decoration: none;
-  color: inherit;
-}
-
-/* Additional styles for layout and spacing */
-.recipes-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-}
-
-.home-main {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
-}
-
-.home-main h1 {
-  margin-bottom: 20px;
-  font-size: 2em; /* Increase font size */
-}
-
-/* Footer styles */
-.footer {
-  background-color: #242C26; /* Dark background color */
-  color: white;
-  padding: 20px 0;
-  text-align: center;
-}
-
-.footer-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.footer-content p {
-  margin: 10px 0;
-}
-
-.footer-links {
-  display: flex;
-  gap: 15px;
-  margin-top: 10px;
-}
-
-.footer-link {
-  color: white;
-  text-decoration: none;
-  font-size: 16px;
-}
-
-.footer-link:hover {
-  text-decoration: underline;
 }

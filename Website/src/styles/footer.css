@@ -1,0 +1,40 @@
+.footer {
+    background-color: #8A6340; /* Same as header */
+    color: white;
+    box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1); /* Similar shadow effect */
+    padding: 20px 0;
+  }
+  
+  .footer-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  
+  .footer p {
+    margin: 0;
+  }
+  
+  .footer-links {
+    list-style: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .footer-links li {
+    margin-left: 20px;
+  }
+  
+  .footer-links li a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+  }
+  .footer-link:hover {
+    text-decoration: underline;
+  }
+  

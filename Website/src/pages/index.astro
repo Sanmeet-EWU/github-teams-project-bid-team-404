@@ -24,6 +24,8 @@ try {
 <head>
   <link rel="stylesheet" href="/styles/global.css">
   <link rel="stylesheet" href="/styles/home.css">
+  <link rel="stylesheet" href="/styles/header.css">
+  <link rel="stylesheet" href="/styles/footer.css">
 </head>
 <body>
   <Header />
@@ -32,16 +34,19 @@ try {
     <section class="recipes-section">
       {recipes.length > 0 ? (
         recipes.map((recipe) => (
-          <a href={`/recipes/${recipe.Slug}`} class="recipe-link"> <!-- Link to the dynamic route -->
-            <article class="recipe-card">
-              <img src={recipe.Image} alt={recipe.Title} class="recipe-image" />
-              <div class="recipe-content">
-                <h2>{recipe.Title}</h2>
-                <p>Chef {recipe.Author}</p>
-                <p>{recipe.Subtitle}</p>
+          <article class="recipe-card">
+            <img src={recipe.Image} alt={recipe.Title} class="recipe-image" />
+            <div class="recipe-content">
+              <h2><a href={`/recipes/${recipe.Title.toLowerCase().replace(/\s+/g, '-')}`}>{recipe.Title}</a></h2>
+              <p>Chef {recipe.Author}</p>
+              <p>{recipe.Subtitle}</p>
+              <div class="recipe-votes">
+                <button><img src="../../images/up.png" alt="Up arrow"></button>
+                <span>0</span>
+                <button><img src="../../images/down.png" alt="Down arrow"></button>
               </div>
-            </article>
-          </a>
+            </div>
+          </article>
         ))
       ) : (
         <p>No recipes found.</p>

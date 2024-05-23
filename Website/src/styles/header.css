@@ -1,73 +1,106 @@
- /* Existing styles */
- .header {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	background-color: #8A6340; /* Adjusted to match the screenshot */
-	padding: 10px 20px;
-  }
-  
-  .logo img {
-	height: 100px;
-	width: auto;
-  }
-  
-  .nav .nav-list {
-	display: flex;
-	align-items: center;
-	list-style: none;
-	margin: 0;
-	padding: 0;
-  }
-  
-  .nav .nav-list li {
-	margin-right: 20px;
-  }
-  
-  .nav .nav-list li a {
-	color: white;
-	text-decoration: none;
-	font-size: 16px;
-  }
-  
-  .create-post {
-	background-color: #14902A; /* Green color for the Create Post button */
-	color: white;
-	border: none;
-	padding: 10px 15px;
-	border-radius: 5px;
-	cursor: pointer;
-  }
-  
-  .search-container {
-	display: flex;
-	align-items: center;
-  }
-  
-  .search-input {
-	padding: 5px;
-	border: none;
-	border-radius: 3px;
-  }
-  
-  .search-button {
-	background-color: white;
-	border: none;
-	padding: 5px 10px;
-	border-radius: 3px;
-	margin-left: 5px;
-	cursor: pointer;
-  }
-  
-  .auth .auth-button {
-	background-color: #14902A; /* Green color for the Sign In/Sign Up button */
-	color: white;
-	border: none;
-	padding: 10px 15px;
-	border-radius: 5px;
-	cursor: pointer;
-  }
-  .headerContainer{
-    width: 100%;
-    background-color: #8A6340;
-  }
+/* Existing styles */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #8A6340; /* Adjusted to match the screenshot */
+  height: 100px; /* Match this to your logo height */
+  padding: 0; /* Remove any extra padding */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add box shadow */
+}
+
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1200px; /* Limit the max width */
+  margin: 0 auto; /* Center the container */
+  width: 100%;
+  padding: 0 20px; /* Add some horizontal padding */
+}
+
+.logo img {
+  height: 100px; /* Ensure the logo height is consistent */
+  width: auto;
+}
+
+.nav .nav-list {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav .nav-list li {
+  margin-right: 20px;
+}
+
+.nav .nav-list li a {
+  color: white;
+  text-decoration: none;
+  font-size: 16px;
+  line-height: 100px; /* Align text vertically */
+}
+
+.create-post {
+  background-color: #14902A; /* Green color for the Create Post button */
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  height: 40px; /* Adjust to match button height */
+  margin: auto 0; /* Center the button vertically */
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+  height: 100%; /* Ensure it takes the full height of the header */
+}
+
+.search-input {
+  padding: 5px;
+  border: none;
+  border-radius: 3px;
+  height: 30px; /* Adjust to match input height */
+}
+
+.search-button {
+  background-color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 3px;
+  margin-left: 5px;
+  cursor: pointer;
+  height: 30px; /* Adjust to match button height */
+}
+
+.auth .auth-button {
+  background-color: #14902A; /* Green color for the Sign In/Sign Up button */
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  height: 40px; /* Adjust to match button height */
+  margin: auto 0; /* Center the button vertically */
+}
+
+.headerWrapper {
+  width: 100%;
+  background-color: #8A6340;
+}
+
+.container {
+  max-width: 1200px; /* Limit the max width */
+  margin: 0 auto; /* Center the container */
+  padding: 20px; /* Add some padding */
+}
+
+.green-bar {
+  width: 100%;
+  height: 10px; /* Adjust the height of the green bar */
+  background-color: #14902A; /* Green color for the bar */
+}
