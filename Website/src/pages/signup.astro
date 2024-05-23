@@ -2,7 +2,6 @@
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import BaseHead from '../components/BaseHead.astro';
-import "../styles/auth.css";
 ---
 
 <html lang="en">
@@ -23,9 +22,9 @@ import "../styles/auth.css";
     </div>
   </main>
   <Footer />
-  <script type="module" src="/auth.js"></script>
+  <script type="module" src="/public/auth.js"></script>
   <script type="module">
-    import { signUp } from '../../public/auth.js';
+    import { signUp } from '../../public/auth'; // Ensure this import is correct
 
     const handleSignUp = async (event) => {
       event.preventDefault();
@@ -35,7 +34,6 @@ import "../styles/auth.css";
         const user = await signUp(email, password);
         console.log('Signed up successfully:', user);
         document.getElementById('signUpErrorMessage').textContent = '';
-        window.location.href = '/signin';
       } catch (error) {
         document.getElementById('signUpErrorMessage').textContent = error.message;
       }
