@@ -1,12 +1,20 @@
 // src/dataFetch.js
-import { collection, getDocs } from 'firebase/firestore';
-import { db } from './firebaseConfig'; // Ensure the path is correct
+import { getCollection } from 'astro:content';
 
-const fetchRecipes = async () => {
-  const recipesCol = collection(db, 'recipes');
-  const recipeSnapshot = await getDocs(recipesCol);
-  const recipeList = recipeSnapshot.docs.map(doc => doc.data());
-  return recipeList;
-};
-
-export { fetchRecipes };
+export async function fetchRecipes() {
+  const posts = await getCollection('recipes');
+  return posts.map((post) => ({
+    ...post,
+    data: {
+      ...post.data,
+      servings: post.data.servings || '',
+      prepTime: post.data.prepTime || '',
+      cookTime: post.data.cookTime || '',
+      directions: post.data.directions || '',
+      ingredients: post.data.ingredients || '',
+      tags: post.data.tags || [],
+      comments: post.data.comments || [],
+      suggestions: post.data.suggestions || []
+    }
+  }));
+}

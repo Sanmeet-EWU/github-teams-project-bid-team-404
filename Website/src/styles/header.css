@@ -1,0 +1,73 @@
+ /* Existing styles */
+ .header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	background-color: #8A6340; /* Adjusted to match the screenshot */
+	padding: 10px 20px;
+  }
+  
+  .logo img {
+	height: 100px;
+	width: auto;
+  }
+  
+  .nav .nav-list {
+	display: flex;
+	align-items: center;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+  }
+  
+  .nav .nav-list li {
+	margin-right: 20px;
+  }
+  
+  .nav .nav-list li a {
+	color: white;
+	text-decoration: none;
+	font-size: 16px;
+  }
+  
+  .create-post {
+	background-color: #14902A; /* Green color for the Create Post button */
+	color: white;
+	border: none;
+	padding: 10px 15px;
+	border-radius: 5px;
+	cursor: pointer;
+  }
+  
+  .search-container {
+	display: flex;
+	align-items: center;
+  }
+  
+  .search-input {
+	padding: 5px;
+	border: none;
+	border-radius: 3px;
+  }
+  
+  .search-button {
+	background-color: white;
+	border: none;
+	padding: 5px 10px;
+	border-radius: 3px;
+	margin-left: 5px;
+	cursor: pointer;
+  }
+  
+  .auth .auth-button {
+	background-color: #14902A; /* Green color for the Sign In/Sign Up button */
+	color: white;
+	border: none;
+	padding: 10px 15px;
+	border-radius: 5px;
+	cursor: pointer;
+  }
+  .headerContainer{
+    width: 100%;
+    background-color: #8A6340;
+  }

@@ -1,0 +1,111 @@
+
+
+/* Existing header styles */
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #14902A; /* Adjusted to match the screenshot */
+    padding: 10px 20px;
+  }
+  
+  .logo img {
+    height: 40px;
+  }
+  
+  .nav .nav-list {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .nav .nav-list li {
+    margin-right: 20px;
+  }
+  
+  .nav .nav-list li a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+  }
+  
+  .create-post {
+    background-color: #14902A; /* Green color for the Create Post button */
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .search-container {
+    display: flex;
+    align-items: center;
+  }
+  
+  .search-input {
+    padding: 5px;
+    border: none;
+    border-radius: 3px;
+  }
+  
+  .search-button {
+    background-color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    margin-left: 5px;
+    cursor: pointer;
+  }
+  
+  .auth .auth-button {
+    background-color: #14902A; /* Green color for the Sign In/Sign Up button */
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  /* Login page styles */
+  
+  .login-main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 80px); /* Adjust to fit the remaining viewport height */
+    background-color: #242C26; /* Dark background color */
+  }
+  
+  .login-form {
+    display: flex;
+    flex-direction: column;
+    background-color: #333;
+    padding: 20px;
+    border-radius: 8px;
+  }
+  
+  .login-form label {
+    color: white;
+    margin-bottom: 5px;
+  }
+  
+  .login-form input {
+    margin-bottom: 15px;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+  }
+  
+  .login-form button {
+    background-color: #14902A; /* Green color for the Sign In button */
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  

@@ -1,9 +1,8 @@
-// Import the functions you need from the SDKs you need
+// src/firebaseConfig.js
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore"; // Add Firestore import
+import { getFirestore } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyC-qHk1WOIB8R3wWtaUzJ-cQX7aeEttsw0",
   authDomain: "team404-a5176.firebaseapp.com",
@@ -14,8 +13,29 @@ const firebaseConfig = {
   measurementId: "G-ZGPCSYBW0P"
 };
 
+export async function fetchRecipes() {
+  try {
+    const querySnapshot = await getDocs(collection(db, "recipes"));
+    if (querySnapshot.empty) {
+      console.error("No documents found in 'recipes' collection.");
+      return [];
+    } else {
+      const recipes = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        slug: doc.id, // Using document ID as slug
+        data: doc.data()
+      }));
+      console.log("Fetched Recipes:", recipes); // Debug log
+      return recipes;
+    }
+  } catch (error) {
+    console.error("Error fetching recipes:", error);
+    return [];
+  }
+}
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app); // Initialize Firestore
+const db = getFirestore(app);
+const auth = getAuth(app);
 
-export { db }; // Export the Firestore database
+export { db, auth, app };
