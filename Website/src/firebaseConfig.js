@@ -25,7 +25,6 @@ export async function fetchRecipes() {
         slug: doc.id, // Using document ID as slug
         data: doc.data()
       }));
-      console.log("Fetched Recipes:", recipes); // Debug log
       return recipes;
     }
   } catch (error) {

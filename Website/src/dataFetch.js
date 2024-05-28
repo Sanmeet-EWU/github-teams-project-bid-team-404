@@ -6,7 +6,6 @@ export async function fetchRecipes() {
   const recipes = [];
   querySnapshot.forEach((doc) => {
     const data = doc.data();
-    console.log('Fetched document data:', data); // Log each document data
     recipes.push({
       Author: data.Author,
       Title: data.Title,
@@ -21,6 +20,5 @@ export async function fetchRecipes() {
       Subtitle: data.Subtitle // Add Subtitle field
     });
   });
-  console.log('Fetched recipes:', recipes); // Log all recipes fetched
   return recipes;
 }
