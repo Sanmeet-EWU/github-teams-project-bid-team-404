@@ -1,0 +1,43 @@
+.create-browse-main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .create-browse-container {
+    background-color: #8A6340;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .create-browse-container label {
+    display: block;
+    margin: 10px 0 5px;
+  }
+  
+  .create-browse-container input,
+  .create-browse-container textarea {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .create-browse-container button {
+    background-color: #14902A;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .create-browse-container button:hover {
+    background-color: #117b20;
+  }
+  
+  .create-browse-container .error {
+    color: red;
+  }
