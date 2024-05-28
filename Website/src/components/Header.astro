@@ -1,7 +1,6 @@
 ---
 import '../styles/header.css';
 import '../styles/global.css';
-import '../../public/auth.js';
 ---
 
 <header>
@@ -28,4 +27,6 @@ import '../../public/auth.js';
     </div>
     <div class="green-bar"></div>
   </div>
+  <!-- Ensure the script is included to handle auth state on every page -->
+  <script type="module" src="/src/scripts/auth.js"></script>
 </header>
