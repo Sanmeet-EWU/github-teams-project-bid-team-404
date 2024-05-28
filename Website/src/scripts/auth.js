@@ -33,8 +33,16 @@ if (typeof window !== 'undefined') {
     const createPostButton = document.getElementById('create-post');
     const signinSignupLink = document.getElementById('signin-signup-link');
     const signoutButton = document.getElementById('signout-button');
+
+    const showElements = () => {
+      profileLink.classList.remove('hidden');
+      createPostButton.classList.remove('hidden');
+      signinSignupLink.classList.remove('hidden');
+      signoutButton.classList.remove('hidden');
+    };
     
     onAuthStateChanged(auth, (user) => {
+      showElements(); // Ensure elements are shown after checking auth state
       if (user) {
         console.log("User is signed in: ", user); // Debug log
         // User is signed in

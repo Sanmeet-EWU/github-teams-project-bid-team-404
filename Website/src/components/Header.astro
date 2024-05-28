@@ -13,15 +13,15 @@ import '../styles/global.css';
         <nav class="nav">
           <ul class="nav-list">
             <li><a href="/">Home</a></li>
-            <li id="profile-link" style="display: none;"><a href="/profile">Profile</a></li>
+            <li id="profile-link" class="hidden"><a href="/profile">Profile</a></li>
             <li><a href="/contact">Contact</a></li>
             <li><a href="/browse">Browse</a></li>
           </ul>
         </nav>
-        <button class="create-post" id="create-post" style="display: none;"><a href="/createPost" class="create-post">+ Create Post</a></button>
+        <button class="create-post hidden" id="create-post"><a href="/createPost" class="create-post">+ Create Post</a></button>
         <div class="auth" id="auth-container">
-          <a href="/signin" id="signin-signup-link" class="auth-button">Sign In/Sign Up</a>
-          <button id="signout-button" class="auth-button" style="display: none;">Sign Out</button>
+          <a href="/signin" id="signin-signup-link" class="auth-button hidden">Sign In/Sign Up</a>
+          <button id="signout-button" class="auth-button hidden">Sign Out</button>
         </div>
       </div>
     </div>
