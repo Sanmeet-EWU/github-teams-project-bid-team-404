@@ -1,0 +1,47 @@
+.profile-main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.profile-container {
+    background-color: #8A6340;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.profile-container label {
+    display: block;
+    margin: 10px 0 5px;
+}
+
+.profile-container input,
+.profile-container textarea {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.profile-container button {
+    background-color: #14902A;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.profile-container button:hover {
+    background-color: #117b20;
+}
+
+.profile-container .error {
+    color: red;
+}
+
+.profile-container .success {
+    color: green;
+}

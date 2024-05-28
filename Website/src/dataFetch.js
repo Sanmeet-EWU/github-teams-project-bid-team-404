@@ -1,4 +1,4 @@
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, doc, getDoc, setDoc } from 'firebase/firestore';
 import { db } from './firebaseConfig';
 
 export async function fetchRecipes() {
@@ -21,4 +21,29 @@ export async function fetchRecipes() {
     });
   });
   return recipes;
+}
+
+export async function fetchUserProfile(userId) {
+  try{
+    const userDoc = doc(db, 'users', userId);
+    const docSnap = await getDoc(userDoc);
+    if(docSnap.exists()){
+      const data = docSnap.data();
+      console.log('Fetched user profile:', data);
+    }
+    return data();
+  }catch(e){
+    console.error("Error fetching user profile: ", e);
+    throw error
+  }
+}
+
+export async function updateUserProfile(userId, profile) {
+  try{
+    const userDoc = doc(db, 'users', userId);
+    await setDoc(userDoc, profile, {merge: true});
+  }catch(e){
+    console.error("Error updating user profile: ", e);
+    throw error
+  }
 }
