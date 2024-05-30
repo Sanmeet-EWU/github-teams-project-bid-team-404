@@ -1,18 +1,23 @@
 // src/scripts/auth.js
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
-import { initializeApp } from "firebase/app";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from 'firebase/auth';
+import { initializeApp } from 'firebase/app';
+
+// Log all environment variables
+console.log('Environment Variables:', import.meta.env);
+// src/scripts/auth.js
+console.log('Firebase API Key:', import.meta.env.VITE_FIREBASE_API_KEY);
+console.log('All Environment Variables:', import.meta.env);
 
 const firebaseConfig = {
-    apiKey: "AIzaSyC-qHk1WOIB8R3wWtaUzJ-cQX7aeEttsw0",
-    authDomain: "team404-a5176.firebaseapp.com",
-    projectId: "team404-a5176",
-    storageBucket: "team404-a5176.appspot.com",
-    messagingSenderId: "361799218073",
-    appId: "1:361799218073:web:96641296231a2993b4d908",
-    measurementId: "G-ZGPCSYBW0P"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
@@ -40,18 +45,18 @@ if (typeof window !== 'undefined') {
       signinSignupLink.classList.remove('hidden');
       signoutButton.classList.remove('hidden');
     };
-    
+
     onAuthStateChanged(auth, (user) => {
       showElements(); // Ensure elements are shown after checking auth state
       if (user) {
-        console.log("User is signed in: ", user); // Debug log
+        console.log('User is signed in: ', user); // Debug log
         // User is signed in
         profileLink.style.display = 'block';
         createPostButton.style.display = 'block';
         signinSignupLink.style.display = 'none';
         signoutButton.style.display = 'block';
       } else {
-        console.log("User is signed out"); // Debug log
+        console.log('User is signed out'); // Debug log
         // User is signed out
         profileLink.style.display = 'none';
         createPostButton.style.display = 'none';
@@ -61,11 +66,13 @@ if (typeof window !== 'undefined') {
     });
 
     signoutButton.addEventListener('click', () => {
-      signOut(auth).then(() => {
-        window.location.href = '/';
-      }).catch((error) => {
-        console.error('Sign out error', error);
-      });
+      signOut(auth)
+        .then(() => {
+          window.location.href = '/';
+        })
+        .catch((error) => {
+          console.error('Sign out error', error);
+        });
     });
   });
 }

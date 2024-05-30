@@ -69,7 +69,27 @@ if (!recipe) {
         ))}
       </div>
     </div>
+
+    <!-- Comments Section -->
+    <div class="comments-section">
+      <h2>Comments</h2>
+      <div id="comments-list">
+        <!-- Comments will be loaded here -->
+      </div>
+
+      <!-- Comment Form -->
+      <div id="commentFormContainer" class="hidden">
+        <h3>Add a Comment</h3>
+        <form id="addCommentForm">
+          <textarea id="commentText" rows="4" required></textarea>
+          <button type="submit">Submit</button>
+          <p class="error" id="commentErrorMessage"></p>
+        </form>
+      </div>
+      <p id="signInMessage" class="hidden">Please <a href="/signin">sign in</a> to add a comment.</p>
+    </div>
   </main>
   <Footer />
+  <script type="module" src="/src/scripts/comments.js"></script>
 </body>
 </html>
