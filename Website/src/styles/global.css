@@ -19,6 +19,12 @@ html, body {
   main {
 	flex: 1;
   }
+
+  
+.hidden {
+	display: none !important;
+  }
+  
   
  
   /* home.css */

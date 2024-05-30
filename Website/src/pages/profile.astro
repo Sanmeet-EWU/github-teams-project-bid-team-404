@@ -1,1 +1,77 @@
-test
+---
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import BaseHead from '../components/BaseHead.astro';
+import "../styles/profile.css";
+import { fetchUserProfile } from '../dataFetch';
+
+interface UserProfile {
+    username: string;
+    email: string;
+    profilePicture: string;
+    bio: string;
+}
+
+let userId: string | null = null;
+let userProfile: UserProfile | null = null;
+
+try{
+    const response = await fetch(`/api/getCurrentUser`);
+    const userData = await response.json();
+    userId = userData.id;
+    userProfile = await fetchUserProfile(userId);
+} catch (error) {
+    console.error("failed to fetch user profile: ", error);   
+}
+---
+
+<html lang="en">
+<BaseHead />
+<body>
+<main class="profile-main">
+    <h1>User Profile</h1>
+    {userProfile ? (
+    <div class="profile-container">
+        <form id="profileForm">
+        <label for="username">Username</label>
+        <input type="text" id="username" value={userProfile.username} required />
+
+        <label for="email">Email</label>
+        <input type="email" id="email" value={userProfile.email} required />
+
+        <label for="profilePicture">Profile Picture URL</label>
+        <input type="text" id="profilePicture" value={userProfile.profilePicture} />
+
+        <label for="bio">Bio</label>
+        <textarea id="bio" required>{userProfile.bio}</textarea>
+        
+        <button type="button" onclick="handleProfileUpdate()">Update Profile</button>
+        </form>
+        <p class="error" id="profileErrorMessage"></p>
+        <p class="success" id="profileSuccessMessage"></p>
+    </div>
+    ) : (
+        <p>Loading profile...</p>
+    )}
+</main>
+<Footer />
+<script type="module">
+    import { updateUserProfile } from '../dataFetch';
+
+    async function handleProfileUpdate() {
+        const userId = '{{userId}}' // Replace with actual ID
+        const username = document.getElementById('username').value;
+        const email = document.getElementById('email').value;
+        const profilePicture = document.getElementById('profilePic').value;
+        const bio = document.getElementById('bio').value;
+
+        try {
+            await updateUserProfile(userId, { username, email, profilePicture, bio });
+            document.getElementById('profileSuccessMessage').innerText = 'Profile updated successfully';
+        } catch (error) {
+            document.getElementById('profileErrorMessage').innerText = 'Failed to update profile';  
+        }
+    }
+    </script>
+</body>
+</html>
