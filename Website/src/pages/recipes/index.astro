@@ -34,11 +34,11 @@ const posts: Post[] = await getCollection('blog');
               <h2>{post.data.title}</h2>
               <p>Chef {post.data.author}</p>
               <p>{post.data.excerpt}</p>
-              <div class="recipe-votes">
-                <button><img src="/images/up.png" alt="Up arrow"></button>
-                <span>0</span>
-                <button><img src="/images/down.png" alt="Down arrow"></button>
-              </div>
+            </div>
+            <div class="recipe-votes">
+              <button><img src="/images/up.png" alt="Up arrow"></button>
+              <span>0</span>
+              <button><img src="/images/down.png" alt="Down arrow"></button>
             </div>
           </a>
         </article>
