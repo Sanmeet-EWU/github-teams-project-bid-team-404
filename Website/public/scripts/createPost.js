@@ -1,43 +1,86 @@
-import { db } from '../../src/firebaseConfig.js';
-import { collection, addDoc } from 'firebase/firestore';
+import { getFirestore, collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { initializeApp } from 'firebase/app';
+import slugify from 'slugify';
 
-document.getElementById('createPostForm').addEventListener('submit', async (event) => {
-  event.preventDefault();
+const firebaseConfig = {
+  apiKey: import.meta.env.PUBLIC_FIREBASE_API_KEY,
+  authDomain: import.meta.env.PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.PUBLIC_FIREBASE_APP_ID,
+  measurementId: import.meta.env.PUBLIC_FIREBASE_MEASUREMENT_ID
+};
 
-  const title = document.getElementById('title').value;
-  const author = document.getElementById('author').value;
-  const image = document.getElementById('image').value;
-  const instructions = document.getElementById('instructions').value;
-  const ingredients = document.getElementById('ingredients').value.split(',');
-  const prepTime = document.getElementById('prepTime').value;
-  const cookTime = document.getElementById('cookTime').value;
-  const servings = document.getElementById('servings').value;
-  const tags = document.getElementById('tags').value.split(',');
-  const slug = document.getElementById('slug').value; // Ensure slug is unique and URL-friendly
-  const subtitle = document.getElementById('subtitle').value;
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
 
-  try {
-    await addDoc(collection(db, 'recipes'), {
-      Title: title,
-      Author: author,
-      Image: image,
-      Instructions: instructions,
-      Ingredients: ingredients,
-      PrepTime: prepTime,
-      CookTime: cookTime,
-      Servings: servings,
-      Tags: tags,
-      Slug: slug,
-      Subtitle: subtitle,
+document.addEventListener('DOMContentLoaded', () => {
+  const createPostForm = document.getElementById('createPostForm');
+  const titleInput = document.getElementById('title');
+  const authorInput = document.getElementById('author');
+  const imageInput = document.getElementById('image');
+  const instructionsInput = document.getElementById('instructions');
+  const ingredientsInput = document.getElementById('ingredients');
+  const prepTimeInput = document.getElementById('prepTime');
+  const cookTimeInput = document.getElementById('cookTime');
+  const servingsInput = document.getElementById('servings');
+  const tagsInput = document.getElementById('tags');
+  const subtitleInput = document.getElementById('subtitle');
+  const errorMessage = document.getElementById('createPostErrorMessage');
+  const successMessage = document.getElementById('createPostSuccessMessage');
+
+  onAuthStateChanged(auth, (user) => {
+    if (!user) {
+      window.location.href = '/signin';
+    }
+
+    createPostForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const title = titleInput.value;
+      const author = authorInput.value;
+      const image = imageInput.value;
+      const instructions = instructionsInput.value;
+      const ingredients = ingredientsInput.value.split(',').map(item => item.trim());
+      const prepTime = prepTimeInput.value;
+      const cookTime = cookTimeInput.value;
+      const servings = servingsInput.value;
+      const tags = tagsInput.value.split(',').map(item => item.trim());
+      const subtitle = subtitleInput.value;
+      const slug = slugify(title, { lower: true, strict: true });
+
+      try {
+        await addDoc(collection(db, 'posts'), {
+          title,
+          author,
+          image,
+          instructions,
+          ingredients,
+          prepTime,
+          cookTime,
+          servings,
+          tags,
+          subtitle,
+          slug,
+          authorId: user.uid,
+          authorName: user.displayName || user.email,
+          timestamp: serverTimestamp(),
+        });
+
+        // Clear the form
+        createPostForm.reset();
+        errorMessage.textContent = '';
+        successMessage.textContent = 'Post created successfully!';
+        
+        // Redirect or give feedback
+        window.location.href = `/post/${slug}`;
+      } catch (error) {
+        errorMessage.textContent = 'Error creating post: ' + error.message;
+      }
     });
-
-    document.getElementById('createPostSuccessMessage').textContent = 'Recipe created successfully!';
-    document.getElementById('createPostErrorMessage').textContent = '';
-  } catch (error) {
-    document.getElementById('createPostErrorMessage').textContent = `Error creating recipe: ${error.message}`;
-    document.getElementById('createPostSuccessMessage').textContent = '';
-  }
-
-  // Clear form fields
-  document.getElementById('createPostForm').reset();
+  });
 });
