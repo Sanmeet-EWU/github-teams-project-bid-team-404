@@ -54,7 +54,7 @@ import { testLab } from 'firebase-functions';
     else if(searchParam === "Title" || searchParam === "Author"){
       constraints = [collection(db, 'recipes'),  where(searchParam, '==', searchItem)];//TODO: implement orderBys
     }
-    else{
+    else{//For all the range possible options: servings and times
       constraints = [collection(db, 'recipes'),  where(searchParam, '==', searchItem)];//TODO: I would like to add >= and <= options
     }
     
@@ -73,23 +73,23 @@ import { testLab } from 'firebase-functions';
         }
 
         
-    //     querySnapshot.forEach((doc) => {
-    //     const data = doc.data();
-    //     result.push({
-    //       Author: data.Author,
-    //       Title: data.Title,
-    //       Image: data.Image,
-    //       Instructions: data.Instructions,
-    //       Ingredients: data.Ingredients,
-    //       Tags: data.Tags,
-    //       PrepTime: data.PrepTime,
-    //       CookTime: data.CookTime,
-    //       Servings: data.Servings,
-    //       Slug: data.Slug,
-    //       Subtitle: data.Subtitle
-    //     });
-    //   });
-    // return result;
+      //   querySnapshot.forEach((doc) => {
+      //   const data = doc.data();
+      //   result.push({
+      //     Author: data.Author,
+      //     Title: data.Title,
+      //     Image: data.Image,
+      //     Instructions: data.Instructions,
+      //     Ingredients: data.Ingredients,
+      //     Tags: data.Tags,
+      //     PrepTime: data.PrepTime,
+      //     CookTime: data.CookTime,
+      //     Servings: data.Servings,
+      //     Slug: data.Slug,
+      //     Subtitle: data.Subtitle
+      //   });
+      // });
+
         
     } catch (error) {
         console.error("idk something happened");
@@ -98,11 +98,27 @@ import { testLab } from 'firebase-functions';
     const resultSize = result.length;
     output.value = "Result Size:" + resultSize.toString();
 
-    
 
-    result.forEach(element => {
-     document.getElementById("elements")!.innerHTML= JSON.stringify(result); 
-    });
+    // result.forEach(element => {
+    //  document.getElementById("elements")!.innerHTML= JSON.stringify(result); 
+    // });
+
+    let htmlCode = logTheObj(result)
+
+    document.getElementById("elements")!.innerHTML = htmlCode;
+
+    function logTheObj(obj) {
+      var ret = "";
+      for (var o in obj) {
+          var data = obj[o];
+          if (typeof data !== 'object') {
+              ret += "<li>" + o + " : " + data + "</li>";
+          } else {
+              ret += "<li>" + o + " : " + logTheObj(data) + "</li>";
+          }
+      }
+      return "<ul>" + ret + "</ul>";
+    }
 
   </script>
 
@@ -111,11 +127,13 @@ import { testLab } from 'firebase-functions';
 
     <div id="ouput-container">
       <input id="outputId" value="" readonly>
-      
-
     </div>
 
     <p id="elements"> </p>
+
+
+
+    
     
 
 
