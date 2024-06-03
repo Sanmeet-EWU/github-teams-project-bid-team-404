@@ -1,6 +1,7 @@
 // src/scripts/auth.js
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
+import { getFirestore, doc, setDoc } from 'firebase/firestore';
 
 // Log all environment variables
 console.log('Environment Variables:', import.meta.env);
@@ -17,10 +18,18 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db = getFirestore(app);
 
 export const signUp = async (email, password) => {
   const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-  return userCredential.user;
+  const user = userCredential.user;
+  await setDoc(doc(db, 'users', user.uid), {
+    email: user.email,
+    username: '',
+    profilePicture: '',
+    bio: ''
+  });
+  return user;
 };
 
 export const signIn = async (email, password) => {
