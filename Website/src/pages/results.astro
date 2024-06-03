@@ -1,0 +1,126 @@
+---
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import BaseHead from '../components/BaseHead.astro';
+import "../styles/browse.css"
+import { testLab } from 'firebase-functions';
+// import { search } from '../search'
+// let results = await search();
+---
+
+
+<html lang="en">
+<BaseHead/>
+<body>
+
+<!-- Theres gotta be a better way of this... -->
+  <script>
+    import { initializeApp } from "firebase/app";
+    import { getFirestore, or, orderBy } from "firebase/firestore";
+    import { collection, getDocs, limit, query, where, doc } from 'firebase/firestore';
+    
+
+    //Initialize db
+    const firebaseConfig = {
+    apiKey: import.meta.env.PUBLIC_FIREBASE_API_KEY,
+    authDomain: import.meta.env.PUBLIC_FIREBASE_AUTH_DOMAIN,
+    projectId: import.meta.env.PUBLIC_FIREBASE_PROJECT_ID,
+    storageBucket: import.meta.env.PUBLIC_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: import.meta.env.PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+    appId: import.meta.env.PUBLIC_FIREBASE_APP_ID,
+    measurementId: import.meta.env.PUBLIC_FIREBASE_MEASUREMENT_ID
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+
+    let output = (document.getElementById("outputId") as HTMLInputElement);
+
+    //Gather the parameters from the url
+    const params = new URLSearchParams(window.location.search.slice(1));
+    let searchParam = params.get("searchParam")!;
+    let searchItem = params.get("searchItem")!;
+    
+    const result : any[] = [];
+    let constraints : any[] = [];
+
+
+    //Create the correct query
+    if(searchParam === "Ingredients" || searchParam === "Tags"){
+      let searchItems = searchItem.split(",").map(x => x.trim());
+      constraints = [collection(db, 'recipes'),  where(searchParam, 'array-contains-any', searchItems)];
+    }
+    else if(searchParam === "Title" || searchParam === "Author"){
+      constraints = [collection(db, 'recipes'),  where(searchParam, '==', searchItem)];//TODO: implement orderBys
+    }
+    else{
+      constraints = [collection(db, 'recipes'),  where(searchParam, '==', searchItem)];//TODO: I would like to add >= and <= options
+    }
+    
+    output.value =  "Loading...";
+
+      //Try to pull the query from the db
+      try {
+        const q = query.apply(this, constraints);
+        const querySnapshot = await getDocs(q);
+
+        const docSnapshots = querySnapshot.docs;
+        for (var i in docSnapshots) {
+        const doc = docSnapshots[i].data();
+        
+        result.push(doc);
+        }
+
+        
+    //     querySnapshot.forEach((doc) => {
+    //     const data = doc.data();
+    //     result.push({
+    //       Author: data.Author,
+    //       Title: data.Title,
+    //       Image: data.Image,
+    //       Instructions: data.Instructions,
+    //       Ingredients: data.Ingredients,
+    //       Tags: data.Tags,
+    //       PrepTime: data.PrepTime,
+    //       CookTime: data.CookTime,
+    //       Servings: data.Servings,
+    //       Slug: data.Slug,
+    //       Subtitle: data.Subtitle
+    //     });
+    //   });
+    // return result;
+        
+    } catch (error) {
+        console.error("idk something happened");
+    }
+
+    const resultSize = result.length;
+    output.value = "Result Size:" + resultSize.toString();
+
+    
+
+    result.forEach(element => {
+     document.getElementById("elements")!.innerHTML= JSON.stringify(result); 
+    });
+
+  </script>
+
+  <Header/>
+  <main class="results-main">
+
+    <div id="ouput-container">
+      <input id="outputId" value="" readonly>
+      
+
+    </div>
+
+    <p id="elements"> </p>
+    
+
+
+  </main>
+  <Footer/>
+  <script src="../search.js"></script>
+</body>
+</html>
