@@ -41,6 +41,9 @@ import { testLab } from 'firebase-functions';
     const params = new URLSearchParams(window.location.search.slice(1));
     let searchParam = params.get("searchParam")!;
     let searchItem = params.get("searchItem")!;
+
+    let queryHeader = (document.getElementById("queryHeader") as HTMLInputElement);
+    
     
     const result : any[] = [];
     let constraints : any[] = [];
@@ -50,12 +53,15 @@ import { testLab } from 'firebase-functions';
     if(searchParam === "Ingredients" || searchParam === "Tags"){
       let searchItems = searchItem.split(",").map(x => x.trim());
       constraints = [collection(db, 'recipes'),  where(searchParam, 'array-contains-any', searchItems)];
+      queryHeader.value = searchParam + " where " + searchItem;
     }
     else if(searchParam === "Title" || searchParam === "Author"){
       constraints = [collection(db, 'recipes'),  where(searchParam, '==', searchItem)];//TODO: implement orderBys
+      queryHeader.value = searchParam + " where " + searchItem;
     }
     else{//For all the range possible options: servings and times
       constraints = [collection(db, 'recipes'),  where(searchParam, '==', searchItem)];//TODO: I would like to add >= and <= options
+      queryHeader.value = searchParam + " where " + searchItem;
     }
     
     output.value =  "Loading...";
@@ -73,51 +79,36 @@ import { testLab } from 'firebase-functions';
         }
 
         
-      //   querySnapshot.forEach((doc) => {
-      //   const data = doc.data();
-      //   result.push({
-      //     Author: data.Author,
-      //     Title: data.Title,
-      //     Image: data.Image,
-      //     Instructions: data.Instructions,
-      //     Ingredients: data.Ingredients,
-      //     Tags: data.Tags,
-      //     PrepTime: data.PrepTime,
-      //     CookTime: data.CookTime,
-      //     Servings: data.Servings,
-      //     Slug: data.Slug,
-      //     Subtitle: data.Subtitle
-      //   });
-      // });
-
-        
     } catch (error) {
         console.error("idk something happened");
     }
 
     const resultSize = result.length;
     output.value = "Result Size:" + resultSize.toString();
+    
 
-
-    // result.forEach(element => {
-    //  document.getElementById("elements")!.innerHTML= JSON.stringify(result); 
-    // });
-
-    let htmlCode = logTheObj(result)
+    let htmlCode = buildDisplayCode(result);
 
     document.getElementById("elements")!.innerHTML = htmlCode;
 
-    function logTheObj(obj) {
-      var ret = "";
-      for (var o in obj) {
-          var data = obj[o];
-          if (typeof data !== 'object') {
-              ret += "<li>" + o + " : " + data + "</li>";
-          } else {
-              ret += "<li>" + o + " : " + logTheObj(data) + "</li>";
-          }
+
+    function buildDisplayCode(json) {
+      var htmlCode = "";
+
+      if(json.length <= 0) return "<p>No recipes found.</p>";
+
+      for(var recipe in json){
+        htmlCode += "<article class=\"recipe-card\">";
+          htmlCode += "<img src=" + json[recipe].Image + " alt=" + json[recipe].Title + " class=\"recipe-image\" />";
+          htmlCode += "<div class=\"recipe-content\">";
+            htmlCode += "<h2><a href=/recipes/" + json[recipe].Slug + ">" + json[recipe].Title + "</a></h2>";
+            htmlCode += "<p>Chef " + json[recipe].Author + "</p>";
+            htmlCode += "<p>" + json[recipe].Subtitle + "</p>";
+          htmlCode += "</div>";
+        htmlCode += "</article>";
       }
-      return "<ul>" + ret + "</ul>";
+
+      return htmlCode;
     }
 
   </script>
@@ -129,7 +120,10 @@ import { testLab } from 'firebase-functions';
       <input id="outputId" value="" readonly>
     </div>
 
-    <p id="elements"> </p>
+    <h2 id="queryHeader">
+    <section class="recipes-section">
+      <p id="elements"> </p>
+    </section>
 
 
 

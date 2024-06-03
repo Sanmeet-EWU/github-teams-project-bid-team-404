@@ -1,0 +1,55 @@
+.home-main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .recipes-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .recipe-card {
+    display: flex;
+    background-color: #14902A; /* Green background for the recipe card */
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    color: white;
+  }
+  
+  .recipe-image {
+    width: 200px;
+    height: auto;
+    object-fit: cover;
+  }
+  
+  .recipe-content {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+  }
+  
+  .recipe-content h2 a {
+    color: white;
+    text-decoration: none;
+  }
+  
+  .recipe-content p {
+    margin: 5px 0;
+  }
+  
+  .recipe-votes {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .recipe-votes button {
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
