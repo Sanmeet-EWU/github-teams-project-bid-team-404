@@ -45,10 +45,11 @@ if (!recipe) {
   <Header />
   <main class="post-main">
     <h1>{recipe.Title}</h1>
+    <h2>By: {recipe.Author}</h2>
     <div class="post-meta">
       <span class="servings">Serves: {recipe.Servings}</span>
-      <span class="prep-time">Prep Time: {recipe.PrepTime}</span>
-      <span class="cook-time">Cook Time: {recipe.CookTime}</span>
+      <span class="prep-time">Prep Time: {recipe.PrepTime} min</span>
+      <span class="cook-time">Cook Time: {recipe.CookTime} min</span>
     </div>
     <img src={recipe.Image} alt={recipe.Title} class="post-image" />
     <div class="post-content">

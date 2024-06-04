@@ -58,7 +58,7 @@ import { testLab } from 'firebase-functions';
       constraints = [collection(db, 'recipes'), where(searchParam, searchOperator as WhereFilterOp, searchItem), limit(20)];
     }
     else{//For all the range possible options: servings and times
-      constraints = [collection(db, 'recipes'),  where(searchParam, searchOperator as WhereFilterOp, searchItem), limit(20)];
+      constraints = [collection(db, 'recipes'),  where(searchParam, searchOperator as WhereFilterOp, Number(searchItem)), limit(20)];
     }
 
     output.value =  "Loading...";
