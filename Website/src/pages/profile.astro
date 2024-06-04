@@ -58,7 +58,7 @@ import "../styles/profile.css";
       console.log("Displaying user data:", userData);
       const htmlCode = `
         <div class="profile-container">
-          <h2>${userData.profileName || "No Name"}</h2>
+          <h2>${userData.username || "No Name"}</h2>
           <p>Email: ${userData.email}</p>
           <p>Username: <span id="display-username">${userData.username || "No Username"}</span></p>
           <p>Bio: <span id="display-bio">${userData.bio || "No Bio"}</span></p>
