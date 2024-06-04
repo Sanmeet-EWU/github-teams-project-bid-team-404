@@ -10,8 +10,28 @@ import "../styles/profile.css";
 <body>
   <Header/>
   <main class="profile-main">
-    <div id="output-container">
-      <div id="elements">Loading...</div>
+    <div class="profile-header">
+      <div class="profile-picture">
+        <img id="profile-picture" src="default-profile-pic.png" alt="Profile Picture">
+      </div>
+      <div class="profile-info">
+        <h1 id="profile-username">No Username</h1>
+        <p id="profile-bio">No Bio</p>
+        <div class="profile-social">
+          <a href="#" id="social-facebook">Facebook</a>
+          <a href="#" id="social-twitter">Twitter</a>
+          <a href="#" id="social-instagram">Instagram</a>
+        </div>
+      </div>
+    </div>
+    <div class="profile-stats">
+      <div class="stat-item">Posts <span id="posts-count">0</span></div>
+      <div class="stat-item">Comments <span id="comments-count">0</span></div>
+      <div class="stat-item">Suggestions <span id="suggestions-count">0</span></div>
+      <div class="stat-item">Like/Dislike <span id="likes-count">0</span></div>
+    </div>
+    <div class="profile-posts" id="profile-posts">
+      Loading posts...
     </div>
   </main>
   <Footer/>
@@ -23,14 +43,10 @@ import "../styles/profile.css";
 
     console.log("Initializing Firebase...");
 
-    let isEditing = false;
-
     async function fetchUserData(userEmail) {
       console.log("Fetching user data for email:", userEmail);
-      const output = document.getElementById("elements");
 
       if (!userEmail) {
-        output.innerHTML = "No user email found.";
         console.error("No user email found.");
         return;
       }
@@ -45,93 +61,43 @@ import "../styles/profile.css";
           console.log("User data fetched:", userData);
           displayUserData(userData);
         } else {
-          output.innerHTML = "User not found.";
           console.error("User not found.");
         }
       } catch (error) {
-        output.innerHTML = "Error fetching user data.";
         console.error("Error fetching user data:", error);
       }
     }
 
     function displayUserData(userData) {
-      console.log("Displaying user data:", userData);
-      const htmlCode = `
-        <div class="profile-container">
-          <h2>${userData.username || "No Name"}</h2>
-          <p>Email: ${userData.email}</p>
-          <p>Username: <span id="display-username">${userData.username || "No Username"}</span></p>
-          <p>Bio: <span id="display-bio">${userData.bio || "No Bio"}</span></p>
-          <img src="${userData.profilePic || 'default.jpg'}" alt="Profile Picture" class="profile-pic" id="display-profile-pic">
-          <form id="profileForm" style="display: none;">
-            <label for="username">Username</label>
-            <input type="text" id="username" value="${userData.username || ''}">
-            <label for="bio">Bio</label>
-            <textarea id="bio">${userData.bio || ''}</textarea>
-            <label for="profilePicture">Profile Picture URL</label>
-            <input type="text" id="profilePicture" value="${userData.profilePic || ''}">
-            <button type="submit">Update Profile</button>
-          </form>
-          <button id="edit-button">Edit Profile</button>
-          <p id="profileSuccessMessage"></p>
-          <p id="profileErrorMessage"></p>
-        </div>
-      `;
-
-      const output = document.getElementById("elements");
-      if (output) {
-        output.innerHTML = htmlCode;
-        console.log("User data displayed.");
-        document.getElementById('profileForm').addEventListener('submit', updateUserData);
-        document.getElementById('edit-button').addEventListener('click', toggleEdit);
-      }
+      document.getElementById("profile-username").textContent = userData.username || "No Username";
+      document.getElementById("profile-bio").textContent = userData.bio || "No Bio";
+      document.getElementById("profile-picture").src = userData.profilePic || 'default-profile-pic.png';
+      // Add more social links or other details as needed
     }
 
-    function toggleEdit() {
-      isEditing = !isEditing;
-      document.getElementById('profileForm').style.display = isEditing ? 'block' : 'none';
-      document.getElementById('edit-button').textContent = isEditing ? 'Cancel' : 'Edit Profile';
-      document.getElementById('display-username').style.display = isEditing ? 'none' : 'inline';
-      document.getElementById('display-bio').style.display = isEditing ? 'none' : 'inline';
-      document.getElementById('display-profile-pic').style.display = isEditing ? 'none' : 'block';
-    }
-
-    async function updateUserData(event) {
-      event.preventDefault();
-      console.log("Updating user data...");
-
-      const username = document.getElementById('username').value;
-      const bio = document.getElementById('bio').value;
-      const profilePicture = document.getElementById('profilePicture').value;
+    async function fetchUserPosts(userEmail) {
+      console.log("Fetching posts for user:", userEmail);
 
       try {
-        const user = auth.currentUser;
-        if (user) {
-          const userId = user.uid;
-          await setDoc(doc(db, 'users', userId), {
-            username,
-            bio,
-            profilePic: profilePicture
-          }, { merge: true });
+        const postsQuery = query(collection(db, "posts"), where("userEmail", "==", userEmail));
+        const querySnapshot = await getDocs(postsQuery);
 
-          document.getElementById('profileSuccessMessage').textContent = 'Profile updated successfully!';
-          document.getElementById('profileErrorMessage').textContent = '';
-          console.log("Profile updated successfully.");
+        const postsContainer = document.getElementById("profile-posts");
+        postsContainer.innerHTML = ""; // Clear loading text
 
-          // Update displayed data
-          document.getElementById('display-username').textContent = username;
-          document.getElementById('display-bio').textContent = bio;
-          document.getElementById('display-profile-pic').src = profilePicture;
+        querySnapshot.forEach((doc) => {
+          const postData = doc.data();
+          const postElement = document.createElement("div");
+          postElement.classList.add("post-item");
+          postElement.innerHTML = `
+            <h3>${postData.title}</h3>
+            <p>${postData.content}</p>
+          `;
+          postsContainer.appendChild(postElement);
+        });
 
-          // Exit edit mode
-          toggleEdit();
-        } else {
-          throw new Error('No user is signed in');
-        }
       } catch (error) {
-        document.getElementById('profileErrorMessage').textContent = `Error updating profile: ${error.message}`;
-        document.getElementById('profileSuccessMessage').textContent = '';
-        console.error("Error updating profile:", error);
+        console.error("Error fetching posts:", error);
       }
     }
 
@@ -142,9 +108,8 @@ import "../styles/profile.css";
           const userEmail = user.email;
           console.log("User is signed in:", user);
           fetchUserData(userEmail);
+          fetchUserPosts(userEmail);
         } else {
-          const output = document.getElementById("elements");
-          output.innerHTML = "No user is signed in.";
           console.error("No user is signed in.");
         }
       });
