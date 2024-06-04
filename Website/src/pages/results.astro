@@ -2,10 +2,8 @@
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import BaseHead from '../components/BaseHead.astro';
-import "../styles/browse.css"
+import "../styles/results.css"
 import { testLab } from 'firebase-functions';
-// import { search } from '../search'
-// let results = await search();
 ---
 
 
@@ -15,7 +13,8 @@ import { testLab } from 'firebase-functions';
 
 <!-- Theres gotta be a better way of this... -->
   <script>
-    import { initializeApp } from "firebase/app";
+    import type { OrderByDirection, WhereFilterOp } from "firebase-admin/firestore";
+import { initializeApp } from "firebase/app";
     import { getFirestore, or, orderBy } from "firebase/firestore";
     import { collection, getDocs, limit, query, where, doc } from 'firebase/firestore';
     
@@ -41,9 +40,11 @@ import { testLab } from 'firebase-functions';
     const params = new URLSearchParams(window.location.search.slice(1));
     let searchParam = params.get("searchParam")!;
     let searchItem = params.get("searchItem")!;
+    let searchOperator = params.get("searchOperator")!;
 
-    let queryHeader = (document.getElementById("queryHeader") as HTMLInputElement);
+    if(searchOperator == null || searchOperator === "") searchOperator = '==';
     
+    //let searchOperator = (document.getElementById("searchOperator") as HTMLInputElement).value;
     
     const result : any[] = [];
     let constraints : any[] = [];
@@ -51,19 +52,18 @@ import { testLab } from 'firebase-functions';
 
     //Create the correct query
     if(searchParam === "Ingredients" || searchParam === "Tags"){
+      searchOperator = 'array-contains-any';
       let searchItems = searchItem.split(",").map(x => x.trim());
-      constraints = [collection(db, 'recipes'),  where(searchParam, 'array-contains-any', searchItems)];
-      queryHeader.value = searchParam + " where " + searchItem;
+      constraints = [collection(db, 'recipes'),  where(searchParam, searchOperator as WhereFilterOp, searchItems), limit(20)];
     }
     else if(searchParam === "Title" || searchParam === "Author"){
-      constraints = [collection(db, 'recipes'),  where(searchParam, '==', searchItem)];//TODO: implement orderBys
-      queryHeader.value = searchParam + " where " + searchItem;
+      if(searchOperator != '!=') searchOperator = '==';
+      constraints = [collection(db, 'recipes'), where(searchParam, searchOperator as WhereFilterOp, searchItem), limit(20)];//TODO: implement orderBys
     }
     else{//For all the range possible options: servings and times
-      constraints = [collection(db, 'recipes'),  where(searchParam, '==', searchItem)];//TODO: I would like to add >= and <= options
-      queryHeader.value = searchParam + " where " + searchItem;
+      constraints = [collection(db, 'recipes'),  where(searchParam, searchOperator as WhereFilterOp, searchItem), limit(20)];//TODO: I would like to add >= and <= options
     }
-    
+
     output.value =  "Loading...";
 
       //Try to pull the query from the db
@@ -84,7 +84,7 @@ import { testLab } from 'firebase-functions';
     }
 
     const resultSize = result.length;
-    output.value = "Result Size:" + resultSize.toString();
+    output.value = "Result Size:" + resultSize.toString();//Display size
     
 
     let htmlCode = buildDisplayCode(result);
@@ -93,7 +93,7 @@ import { testLab } from 'firebase-functions';
 
 
     function buildDisplayCode(json) {
-      var htmlCode = "";
+      var htmlCode = "<h1>Search: " + searchParam + " " + searchOperator + " " + searchItem + "</h1>";
 
       if(json.length <= 0) return "<p>No recipes found.</p>";
 
@@ -120,7 +120,6 @@ import { testLab } from 'firebase-functions';
       <input id="outputId" value="" readonly>
     </div>
 
-    <h2 id="queryHeader">
     <section class="recipes-section">
       <p id="elements"> </p>
     </section>

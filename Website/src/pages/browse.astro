@@ -29,8 +29,20 @@ import "../styles/browse.css"
             <option value="Author">Author</option>
             <option value="PrepTime">Prep Time (minutes)</option>
             <option value="CookTime">Cook Time (minutes)</option>
-            <option value="Servings">Prep Time (minutes)</option>
+            <option value="Servings">Servings</option>
           </select>
+        
+        <!-- searchOperator only works for non array based searches -->
+        <label for="searchOperator">Operator: </label>
+          <select name="searchOperator" id="searchOperator">
+            <option value="" disabled selected>-select-</option>
+            <option value="==">Equals</option>
+            <option value="!=">Not Equals</option>
+            <option value="<=">Less or Equals</option>
+            <option value=">=">Greater or Equals</option>
+          </select>
+        
+        <p id="element">Tags and Ingredients must be comma seperated. Range operators only apply to numeric searches :)</p>
         
         <label for="searchItem"> Input Search Element(s)</label>
         <input type="text" id="searchItem" name="searchItem" required>
@@ -43,6 +55,6 @@ import "../styles/browse.css"
 
   </main>
   <Footer/>
-  
+  <script type="module" src="/browse.js"></script>
 </body>
 </html>
