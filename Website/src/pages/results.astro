@@ -11,10 +11,9 @@ import { testLab } from 'firebase-functions';
 <BaseHead/>
 <body>
 
-<!-- Theres gotta be a better way of this... -->
   <script>
     import type { OrderByDirection, WhereFilterOp } from "firebase-admin/firestore";
-import { initializeApp } from "firebase/app";
+    import { initializeApp } from "firebase/app";
     import { getFirestore, or, orderBy } from "firebase/firestore";
     import { collection, getDocs, limit, query, where, doc } from 'firebase/firestore';
     
@@ -42,9 +41,7 @@ import { initializeApp } from "firebase/app";
     let searchItem = params.get("searchItem")!;
     let searchOperator = params.get("searchOperator")!;
 
-    if(searchOperator == null || searchOperator === "") searchOperator = '==';
-    
-    //let searchOperator = (document.getElementById("searchOperator") as HTMLInputElement).value;
+    if(searchOperator == null || searchOperator === "") searchOperator = '==';//default to equals search if empty
     
     const result : any[] = [];
     let constraints : any[] = [];
@@ -57,11 +54,11 @@ import { initializeApp } from "firebase/app";
       constraints = [collection(db, 'recipes'),  where(searchParam, searchOperator as WhereFilterOp, searchItems), limit(20)];
     }
     else if(searchParam === "Title" || searchParam === "Author"){
-      if(searchOperator != '!=') searchOperator = '==';
-      constraints = [collection(db, 'recipes'), where(searchParam, searchOperator as WhereFilterOp, searchItem), limit(20)];//TODO: implement orderBys
+      if(searchOperator != '!=') searchOperator = '==';//Can only work with equals or not equals
+      constraints = [collection(db, 'recipes'), where(searchParam, searchOperator as WhereFilterOp, searchItem), limit(20)];
     }
     else{//For all the range possible options: servings and times
-      constraints = [collection(db, 'recipes'),  where(searchParam, searchOperator as WhereFilterOp, searchItem), limit(20)];//TODO: I would like to add >= and <= options
+      constraints = [collection(db, 'recipes'),  where(searchParam, searchOperator as WhereFilterOp, searchItem), limit(20)];
     }
 
     output.value =  "Loading...";
@@ -70,33 +67,33 @@ import { initializeApp } from "firebase/app";
       try {
         const q = query.apply(this, constraints);
         const querySnapshot = await getDocs(q);
-
         const docSnapshots = querySnapshot.docs;
+
+        //Load er' up!
         for (var i in docSnapshots) {
-        const doc = docSnapshots[i].data();
-        
-        result.push(doc);
+          const doc = docSnapshots[i].data();
+          result.push(doc);
         }
+      } catch (error) {
+          console.error("idk something happened");
+      }
 
-        
-    } catch (error) {
-        console.error("idk something happened");
-    }
-
+    //Display search result json size
     const resultSize = result.length;
-    output.value = "Result Size:" + resultSize.toString();//Display size
+    output.value = "Result Size:" + resultSize.toString();
     
-
+    //Create the code which displays the recipe cards that were in the json we got
     let htmlCode = buildDisplayCode(result);
-
     document.getElementById("elements")!.innerHTML = htmlCode;
 
 
     function buildDisplayCode(json) {
+      //Start be stating the search conditions
       var htmlCode = "<h1>Search: " + searchParam + " " + searchOperator + " " + searchItem + "</h1>";
 
       if(json.length <= 0) return "<p>No recipes found.</p>";
 
+      //Create a display card for each recipe in the json
       for(var recipe in json){
         htmlCode += "<article class=\"recipe-card\">";
           htmlCode += "<img src=" + json[recipe].Image + " alt=" + json[recipe].Title + " class=\"recipe-image\" />";
@@ -116,22 +113,15 @@ import { initializeApp } from "firebase/app";
   <Header/>
   <main class="results-main">
 
-    <div id="ouput-container">
-      <input id="outputId" value="" readonly>
-    </div>
+    <!-- Displays "Loading" before displaying the number of matching results -->
+    <input id="outputId" value="" readonly>
 
+    <!-- The elements paragraph will be changed to display results once the query has been processed -->
     <section class="recipes-section">
       <p id="elements"> </p>
     </section>
 
-
-
-    
-    
-
-
   </main>
   <Footer/>
-  <!-- <script src="../scripts/search.js"></script> -->
 </body>
 </html>
