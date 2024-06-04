@@ -3,9 +3,6 @@ import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, on
 import { initializeApp } from 'firebase/app';
 import { getFirestore, doc, setDoc } from 'firebase/firestore';
 
-// Log all environment variables
-console.log('Environment Variables:', import.meta.env);
-
 const firebaseConfig = {
   apiKey: import.meta.env.PUBLIC_FIREBASE_API_KEY,
   authDomain: import.meta.env.PUBLIC_FIREBASE_AUTH_DOMAIN,
@@ -82,3 +79,23 @@ if (typeof window !== 'undefined') {
     });
   });
 }
+const handleSignUp = async (event) => {
+  event.preventDefault();
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+  const signUpErrorMessage = document.getElementById('signUpErrorMessage');
+
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    // Signed in
+    const user = userCredential.user;
+    console.log('User signed up:', user);
+    // Redirect or give feedback
+    window.location.href = '/';
+  } catch (error) {
+    console.error('Error signing up:', error);
+    signUpErrorMessage.textContent = error.message;
+  }
+};
+
+document.getElementById('signUpForm').addEventListener('submit', handleSignUp);
