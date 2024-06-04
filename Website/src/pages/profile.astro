@@ -33,6 +33,26 @@ import "../styles/profile.css";
     <div class="profile-posts" id="profile-posts">
       Loading posts...
     </div>
+    <button id="edit-button">Edit Profile</button>
+    <form id="profileForm" style="display: none;">
+      <label for="username">Username</label>
+      <input type="text" id="username">
+      <label for="bio">Bio</label>
+      <textarea id="bio"></textarea>
+      <label for="profilePicture">Profile Picture URL</label>
+      <input type="text" id="profilePicture">
+      <label for="profileImageUpload">Upload Profile Picture</label>
+      <input type="file" id="profileImageUpload" accept="image/*">
+      <label for="facebook">Facebook URL</label>
+      <input type="text" id="facebook">
+      <label for="twitter">Twitter URL</label>
+      <input type="text" id="twitter">
+      <label for="instagram">Instagram URL</label>
+      <input type="text" id="instagram">
+      <button type="submit">Update Profile</button>
+    </form>
+    <p id="profileSuccessMessage"></p>
+    <p id="profileErrorMessage"></p>
   </main>
   <Footer/>
 
@@ -40,8 +60,13 @@ import "../styles/profile.css";
     import { collection, getDocs, query, where, doc, setDoc } from "../../node_modules/firebase/firestore";
     import { onAuthStateChanged } from "../../node_modules/firebase/auth";
     import { db, auth } from '../src/firebaseConfig.js';
+    import { getStorage, ref, uploadBytes, getDownloadURL } from "../../node_modules/firebase/storage";
 
     console.log("Initializing Firebase...");
+
+    const storage = getStorage();
+
+    let isEditing = false;
 
     async function fetchUserData(userEmail) {
       console.log("Fetching user data for email:", userEmail);
@@ -72,32 +97,82 @@ import "../styles/profile.css";
       document.getElementById("profile-username").textContent = userData.username || "No Username";
       document.getElementById("profile-bio").textContent = userData.bio || "No Bio";
       document.getElementById("profile-picture").src = userData.profilePic || 'default-profile-pic.png';
-      // Add more social links or other details as needed
+      document.getElementById("social-facebook").href = userData.facebook || "#";
+      document.getElementById("social-twitter").href = userData.twitter || "#";
+      document.getElementById("social-instagram").href = userData.instagram || "#";
+
+      // Populate the form fields with the current user data
+      document.getElementById("username").value = userData.username || "";
+      document.getElementById("bio").value = userData.bio || "";
+      document.getElementById("profilePicture").value = userData.profilePic || "";
+      document.getElementById("facebook").value = userData.facebook || "";
+      document.getElementById("twitter").value = userData.twitter || "";
+      document.getElementById("instagram").value = userData.instagram || "";
     }
 
-    async function fetchUserPosts(userEmail) {
-      console.log("Fetching posts for user:", userEmail);
+    function toggleEdit() {
+      isEditing = !isEditing;
+      document.getElementById('profileForm').style.display = isEditing ? 'block' : 'none';
+      document.getElementById('edit-button').textContent = isEditing ? 'Cancel' : 'Edit Profile';
+    }
+
+    async function updateUserData(event) {
+      event.preventDefault();
+      console.log("Updating user data...");
+
+      const username = document.getElementById('username').value;
+      const bio = document.getElementById('bio').value;
+      const profilePicture = document.getElementById('profilePicture').value;
+      const facebook = document.getElementById('facebook').value;
+      const twitter = document.getElementById('twitter').value;
+      const instagram = document.getElementById('instagram').value;
 
       try {
-        const postsQuery = query(collection(db, "posts"), where("userEmail", "==", userEmail));
-        const querySnapshot = await getDocs(postsQuery);
+        const user = auth.currentUser;
+        if (user) {
+          const userId = user.uid;
 
-        const postsContainer = document.getElementById("profile-posts");
-        postsContainer.innerHTML = ""; // Clear loading text
+          let profilePicURL = profilePicture;
 
-        querySnapshot.forEach((doc) => {
-          const postData = doc.data();
-          const postElement = document.createElement("div");
-          postElement.classList.add("post-item");
-          postElement.innerHTML = `
-            <h3>${postData.title}</h3>
-            <p>${postData.content}</p>
-          `;
-          postsContainer.appendChild(postElement);
-        });
+          // Handle profile image upload
+          const fileInput = document.getElementById('profileImageUpload');
+          if (fileInput.files.length > 0) {
+            const file = fileInput.files[0];
+            const storageRef = ref(storage, `profile_pictures/${userId}/${file.name}`);
+            await uploadBytes(storageRef, file);
+            profilePicURL = await getDownloadURL(storageRef);
+          }
 
+          await setDoc(doc(db, 'users', userId), {
+            username,
+            bio,
+            profilePic: profilePicURL,
+            facebook,
+            twitter,
+            instagram
+          }, { merge: true });
+
+          document.getElementById('profileSuccessMessage').textContent = 'Profile updated successfully!';
+          document.getElementById('profileErrorMessage').textContent = '';
+          console.log("Profile updated successfully.");
+
+          // Update displayed data
+          document.getElementById('profile-username').textContent = username;
+          document.getElementById('profile-bio').textContent = bio;
+          document.getElementById('profile-picture').src = profilePicURL;
+          document.getElementById('social-facebook').href = facebook || "#";
+          document.getElementById('social-twitter').href = twitter || "#";
+          document.getElementById('social-instagram').href = instagram || "#";
+
+          // Exit edit mode
+          toggleEdit();
+        } else {
+          throw new Error('No user is signed in');
+        }
       } catch (error) {
-        console.error("Error fetching posts:", error);
+        document.getElementById('profileErrorMessage').textContent = `Error updating profile: ${error.message}`;
+        document.getElementById('profileSuccessMessage').textContent = '';
+        console.error("Error updating profile:", error);
       }
     }
 
@@ -108,11 +183,12 @@ import "../styles/profile.css";
           const userEmail = user.email;
           console.log("User is signed in:", user);
           fetchUserData(userEmail);
-          fetchUserPosts(userEmail);
         } else {
           console.error("No user is signed in.");
         }
       });
+      document.getElementById('edit-button').addEventListener('click', toggleEdit);
+      document.getElementById('profileForm').addEventListener('submit', updateUserData);
     });
   </script>
 
