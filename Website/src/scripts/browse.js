@@ -1,5 +1,5 @@
 import { db } from '../../src/firebaseConfig.js';
-import { collection, getDocs, limit, collection, query, where } from 'firebase/firestore';
+import { collection, getDocs, limit, query, where } from 'firebase/firestore';
 
 
 document.getElementById('createQuery').addEventListener('submit', async (event) => {

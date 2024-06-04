@@ -2,105 +2,154 @@
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import BaseHead from '../components/BaseHead.astro';
-import "../styles/profile.css"
+import "../styles/profile.css";
 ---
 
 <html lang="en">
 <BaseHead/>
 <body>
+  <Header/>
+  <main class="profile-main">
+    <div id="output-container">
+      <div id="elements">Loading...</div>
+    </div>
+  </main>
+  <Footer/>
 
-    <Header/>
-    <main class="profile-main">
-      <div id="output-container">
-        <input id="outputId" value="" readonly>
-      </div>
-    
-      <section class="profile-section">
-        <div id="elements">Loading...</div>
-      </section>
-    </main>
-    <Footer/>
+  <script type="module">
+    import { collection, getDocs, query, where, doc, setDoc } from "../../node_modules/firebase/firestore";
+    import { onAuthStateChanged } from "../../node_modules/firebase/auth";
+    import { db, auth } from '../src/firebaseConfig.js';
 
-<script>
-  import { initializeApp } from "firebase/app";
-  import { getFirestore, collection, query, where, getDocs } from "firebase/firestore";
+    console.log("Initializing Firebase...");
 
-  // Initialize Firebase
-  const firebaseConfig = {
-    apiKey: import.meta.env.PUBLIC_FIREBASE_API_KEY,
-    authDomain: import.meta.env.PUBLIC_FIREBASE_AUTH_DOMAIN,
-    projectId: import.meta.env.PUBLIC_FIREBASE_PROJECT_ID,
-    storageBucket: import.meta.env.PUBLIC_FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: import.meta.env.PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-    appId: import.meta.env.PUBLIC_FIREBASE_APP_ID,
-    measurementId: import.meta.env.PUBLIC_FIREBASE_MEASUREMENT_ID
-  };
+    let isEditing = false;
 
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
+    async function fetchUserData(userEmail) {
+      console.log("Fetching user data for email:", userEmail);
+      const output = document.getElementById("elements");
 
-  async function fetchUserData() {
-    // Gather the parameters from the URL
-    const params = new URLSearchParams(window.location.search.slice(1));
-    let userEmail = params.get("userEmail");
-
-    let output = document.getElementById("outputId");
-
-    if (!userEmail) {
-      if (output) {
-        output.innerHTML = "<p>No user email provided in URL.</p>";
+      if (!userEmail) {
+        output.innerHTML = "No user email found.";
+        console.error("No user email found.");
+        return;
       }
-      console.log("No user email provided in URL.");
-      return;
-    }
 
-    console.log("User email from URL:", userEmail);
-
-    // Fetch the user data from Firestore
-    const userQuery = query(collection(db, "users"), where("email", "==", userEmail));
-    try{
+      try {
+        const userQuery = query(collection(db, "users"), where("email", "==", userEmail));
         const querySnapshot = await getDocs(userQuery);
 
-        if(!querySnapshot.empty){
-            const userDoc = querySnapshot.docs[0];
-            const userData = userDoc.data();
-            console.log("User data:", userData);
-            displayUserData(userData);
+        if (!querySnapshot.empty) {
+          const userDoc = querySnapshot.docs[0];
+          const userData = userDoc.data();
+          console.log("User data fetched:", userData);
+          displayUserData(userData);
         } else {
-            if(output){
-                output.innerHTML = "<p>No user data found.</p>";
-            }
-            console.log("No user data found.");
+          output.innerHTML = "User not found.";
+          console.error("User not found.");
         }
-    } catch (error) {
+      } catch (error) {
+        output.innerHTML = "Error fetching user data.";
         console.error("Error fetching user data:", error);
-        if(output){
-            output.innerHTML = "<p>Error fetching user data.</p>";
+      }
+    }
+
+    function displayUserData(userData) {
+      console.log("Displaying user data:", userData);
+      const htmlCode = `
+        <div class="profile-container">
+          <h2>${userData.profileName || "No Name"}</h2>
+          <p>Email: ${userData.email}</p>
+          <p>Username: <span id="display-username">${userData.username || "No Username"}</span></p>
+          <p>Bio: <span id="display-bio">${userData.bio || "No Bio"}</span></p>
+          <img src="${userData.profilePic || 'default.jpg'}" alt="Profile Picture" class="profile-pic" id="display-profile-pic">
+          <form id="profileForm" style="display: none;">
+            <label for="username">Username</label>
+            <input type="text" id="username" value="${userData.username || ''}">
+            <label for="bio">Bio</label>
+            <textarea id="bio">${userData.bio || ''}</textarea>
+            <label for="profilePicture">Profile Picture URL</label>
+            <input type="text" id="profilePicture" value="${userData.profilePic || ''}">
+            <button type="submit">Update Profile</button>
+          </form>
+          <button id="edit-button">Edit Profile</button>
+          <p id="profileSuccessMessage"></p>
+          <p id="profileErrorMessage"></p>
+        </div>
+      `;
+
+      const output = document.getElementById("elements");
+      if (output) {
+        output.innerHTML = htmlCode;
+        console.log("User data displayed.");
+        document.getElementById('profileForm').addEventListener('submit', updateUserData);
+        document.getElementById('edit-button').addEventListener('click', toggleEdit);
+      }
+    }
+
+    function toggleEdit() {
+      isEditing = !isEditing;
+      document.getElementById('profileForm').style.display = isEditing ? 'block' : 'none';
+      document.getElementById('edit-button').textContent = isEditing ? 'Cancel' : 'Edit Profile';
+      document.getElementById('display-username').style.display = isEditing ? 'none' : 'inline';
+      document.getElementById('display-bio').style.display = isEditing ? 'none' : 'inline';
+      document.getElementById('display-profile-pic').style.display = isEditing ? 'none' : 'block';
+    }
+
+    async function updateUserData(event) {
+      event.preventDefault();
+      console.log("Updating user data...");
+
+      const username = document.getElementById('username').value;
+      const bio = document.getElementById('bio').value;
+      const profilePicture = document.getElementById('profilePicture').value;
+
+      try {
+        const user = auth.currentUser;
+        if (user) {
+          const userId = user.uid;
+          await setDoc(doc(db, 'users', userId), {
+            username,
+            bio,
+            profilePic: profilePicture
+          }, { merge: true });
+
+          document.getElementById('profileSuccessMessage').textContent = 'Profile updated successfully!';
+          document.getElementById('profileErrorMessage').textContent = '';
+          console.log("Profile updated successfully.");
+
+          // Update displayed data
+          document.getElementById('display-username').textContent = username;
+          document.getElementById('display-bio').textContent = bio;
+          document.getElementById('display-profile-pic').src = profilePicture;
+
+          // Exit edit mode
+          toggleEdit();
+        } else {
+          throw new Error('No user is signed in');
         }
-        console.error("Error fetching user data:", error);
+      } catch (error) {
+        document.getElementById('profileErrorMessage').textContent = `Error updating profile: ${error.message}`;
+        document.getElementById('profileSuccessMessage').textContent = '';
+        console.error("Error updating profile:", error);
+      }
     }
-  }
 
-  function displayUserData(userData) {
-    let htmlCode = `
-      <div class="profile-container">
-        <h2>${userData.profileName || "No Name"}</h2>
-        <p>Email: ${userData.email}</p>
-        <p>Username: ${userData.username || "No Username"}</p>
-        <p>Bio: ${userData.bio || "No Bio"}</p>
-        <img src="${userData.profilePic || 'default.jpg'}" alt="Profile Picture" class="profile-pic">
-      </div>
-    `;
-
-    let output = document.getElementById("outputId");
-    if (output) {
-      output.innerHTML = htmlCode;
-    }
-  }
-
-  // Fetch user data when the page loads
-  window.addEventListener('DOMContentLoaded', fetchUserData);
-</script>
+    window.addEventListener('DOMContentLoaded', () => {
+      console.log("Page loaded. Checking auth state...");
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          const userEmail = user.email;
+          console.log("User is signed in:", user);
+          fetchUserData(userEmail);
+        } else {
+          const output = document.getElementById("elements");
+          output.innerHTML = "No user is signed in.";
+          console.error("No user is signed in.");
+        }
+      });
+    });
+  </script>
 
 </body>
 </html>

@@ -17,6 +17,8 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
+export { auth, db };
+
 export const signUp = async (email, password) => {
   const userCredential = await createUserWithEmailAndPassword(auth, email, password);
   const user = userCredential.user;
@@ -26,11 +28,13 @@ export const signUp = async (email, password) => {
     profilePicture: '',
     bio: ''
   });
+  localStorage.setItem('userEmail', user.email); // Used for Account Page
   return user;
 };
 
 export const signIn = async (email, password) => {
   const userCredential = await signInWithEmailAndPassword(auth, email, password);
+  localStorage.setItem('userEmail', userCredential.user.email); // Used for Account Page
   return userCredential.user;
 };
 
@@ -43,10 +47,10 @@ if (typeof window !== 'undefined') {
     const signoutButton = document.getElementById('signout-button');
 
     const showElements = () => {
-      profileLink.classList.remove('hidden');
-      createPostButton.classList.remove('hidden');
-      signinSignupLink.classList.remove('hidden');
-      signoutButton.classList.remove('hidden');
+      if (profileLink) profileLink.classList.remove('hidden');
+      if (createPostButton) createPostButton.classList.remove('hidden');
+      if (signinSignupLink) signinSignupLink.classList.remove('hidden');
+      if (signoutButton) signoutButton.classList.remove('hidden');
     };
 
     onAuthStateChanged(auth, (user) => {
@@ -54,31 +58,34 @@ if (typeof window !== 'undefined') {
       if (user) {
         console.log('User is signed in: ', user); // Debug log
         // User is signed in
-        profileLink.style.display = 'block';
-        createPostButton.style.display = 'block';
-        signinSignupLink.style.display = 'none';
-        signoutButton.style.display = 'block';
+        if (profileLink) profileLink.style.display = 'block';
+        if (createPostButton) createPostButton.style.display = 'block';
+        if (signinSignupLink) signinSignupLink.style.display = 'none';
+        if (signoutButton) signoutButton.style.display = 'block';
       } else {
         console.log('User is signed out'); // Debug log
         // User is signed out
-        profileLink.style.display = 'none';
-        createPostButton.style.display = 'none';
-        signinSignupLink.style.display = 'block';
-        signoutButton.style.display = 'none';
+        if (profileLink) profileLink.style.display = 'none';
+        if (createPostButton) createPostButton.style.display = 'none';
+        if (signinSignupLink) signinSignupLink.style.display = 'block';
+        if (signoutButton) signoutButton.style.display = 'none';
       }
     });
 
-    signoutButton.addEventListener('click', () => {
-      signOut(auth)
-        .then(() => {
-          window.location.href = '/';
-        })
-        .catch((error) => {
-          console.error('Sign out error', error);
-        });
-    });
+    if (signoutButton) {
+      signoutButton.addEventListener('click', () => {
+        signOut(auth)
+          .then(() => {
+            window.location.href = '/';
+          })
+          .catch((error) => {
+            console.error('Sign out error', error);
+          });
+      });
+    }
   });
 }
+
 const handleSignUp = async (event) => {
   event.preventDefault();
   const email = document.getElementById('email').value;
@@ -98,4 +105,10 @@ const handleSignUp = async (event) => {
   }
 };
 
-document.getElementById('signUpForm').addEventListener('submit', handleSignUp);
+// Ensure the DOM is fully loaded before adding event listeners
+window.addEventListener('DOMContentLoaded', () => {
+  const signUpForm = document.getElementById('signUpForm');
+  if (signUpForm) {
+    signUpForm.addEventListener('submit', handleSignUp);
+  }
+});
