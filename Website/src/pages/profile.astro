@@ -7,261 +7,351 @@ import "../styles/profile.css";
 
 <html lang="en">
 <BaseHead/>
+<head>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/fontawesome.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/js/all.min.js"></script>
+  <style>
+    /* Modal styles */
+    .modal {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+    .modal-content {
+      background-color: white;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+      max-width: 500px;
+      border-radius: 10px;
+      text-align: center;
+      position: relative;
+    }
+    .close {
+      color: #aaa;
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .close:hover,
+    .close:focus {
+      color: black;
+      text-decoration: none;
+    }
+    .crop-container {
+      width: 100%;
+      height: auto;
+      margin-bottom: 10px;
+    }
+    #image-preview {
+      max-width: 100%;
+      max-height: 400px;
+      object-fit: contain;
+    }
+    .profile-social a {
+      margin: 0 10px;
+      color: inherit;
+    }
+  </style>
+</head>
 <body>
-  <Header/>
-  <main class="profile-main">
-    <div class="profile-header">
-      <div class="profile-picture">
-        <img id="profile-picture" src="/images/default-avatar-icon-of-social-media-user-vector.jpg" alt="Profile Picture">
-      </div>
-      <div class="profile-info">
-        <h1 id="profile-username">No Username</h1>
-        <p id="profile-bio">No Bio</p>
-        <div class="profile-social">
-          <a href="#" id="social-facebook">Facebook</a>
-          <a href="#" id="social-twitter">Twitter</a>
-          <a href="#" id="social-instagram">Instagram</a>
-        </div>
-      </div>
-    </div>
-    <div class="profile-stats">
-      <div class="stat-item">Posts<br><span id="posts-count">0</span></div>
-      <div class="stat-item">Comments<br><span id="comments-count">0</span></div>
-      <div class="stat-item">Suggestions<br><span id="suggestions-count">0</span></div>
-      <div class="stat-item">Like/Dislike<br><span id="likes-count">0</span></div>
-    </div>
-    <div class="profile-posts" id="profile-posts">
-      Loading posts...
-    </div>
-    <button id="edit-button">Edit Profile</button>
-    <form id="profileForm" style="display: none;">
-      <label for="username">Username</label>
-      <input type="text" id="username">
-      <label for="bio">Bio</label>
-      <textarea id="bio"></textarea>
-      <label for="profileImageUpload">Upload Profile Picture</label>
-      <input type="file" id="profileImageUpload" accept="image/*">
-      <label for="facebook">Facebook URL</label>
-      <input type="text" id="facebook">
-      <label for="twitter">Twitter URL</label>
-      <input type="text" id="twitter">
-      <label for="instagram">Instagram URL</label>
-      <input type="text" id="instagram">
-      <button type="submit">Update Profile</button>
-    </form>
-    <p id="profileSuccessMessage"></p>
-    <p id="profileErrorMessage"></p>
-  </main>
-  <Footer/>
 
-  <!-- Modal for Cropping Image -->
-  <div id="crop-modal" class="modal" style="display: none;">
-    <div class="modal-content">
-      <span id="close-crop-modal" class="close">&times;</span>
-      <img id="image-preview" src="">
-      <button id="crop-button">Crop Image</button>
+<Header/>
+<main class="profile-main">
+  <div class="profile-header">
+    <div class="profile-picture">
+      <img id="profile-picture" src="/images/default-avatar-icon-of-social-media-user-vector.jpg" alt="Profile Picture">
+    </div>
+    <div class="profile-info">
+      <h1 id="profile-username">No Username</h1>
+      <p id="profile-bio">No Bio</p>
+      <div class="profile-social">
+        <a href="#" id="social-facebook"><i class="fab fa-facebook"></i></a>
+        <a href="#" id="social-twitter"><i class="fab fa-twitter"></i></a>
+        <a href="#" id="social-instagram"><i class="fab fa-instagram"></i></a>
+      </div>
     </div>
   </div>
+  <div class="profile-stats">
+    <div class="stat-item">Posts<br><span id="posts-count">0</span></div>
+    <div class="stat-item">Comments<br><span id="comments-count">0</span></div>
+    <div class="stat-item">Suggestions<br><span id="suggestions-count">0</span></div>
+    <div class="stat-item">Like/Dislike<br><span id="likes-count">0</span></div>
+  </div>
+  <div class="profile-posts" id="profile-posts">
+    No Posts Yet!
+  </div>
+  <button id="edit-button">Edit Profile</button>
+  <form id="profileForm" style="display: none;">
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input type="text" id="username">
+    </div>
+    <div class="form-group">
+      <label for="bio">Bio</label>
+      <textarea id="bio"></textarea>
+    </div>
+    <div class="form-group">
+      <label for="facebook">Facebook URL</label>
+      <input type="url" id="facebook">
+    </div>
+    <div class="form-group">
+      <label for="twitter">Twitter URL</label>
+      <input type="url" id="twitter">
+    </div>
+    <div class="form-group">
+      <label for="instagram">Instagram URL</label>
+      <input type="url" id="instagram">
+    </div>
+    <div class="form-group">
+      <label for="profileImageUpload">Upload Profile Picture</label>
+      <input type="file" id="profileImageUpload" accept="image/*">
+    </div>
+    <input type="hidden" id="profilePicture">
+    <button type="submit">Update Profile</button>
+  </form>
+  <p id="profileSuccessMessage"></p>
+  <p id="profileErrorMessage"></p>
+</main>
+<Footer/>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css"/>
+<!-- Modal for Cropping Image -->
+<div id="crop-modal" class="modal" style="display: none;">
+  <div class="modal-content">
+    <span id="close-crop-modal" class="close">&times;</span>
+    <div class="crop-container">
+      <img id="image-preview" src="">
+    </div>
+    <button id="crop-button">Crop Image</button>
+  </div>
+</div>
 
-  <script type="module">
-    import { collection, getDocs, query, where, doc, setDoc } from "../../node_modules/firebase/firestore";
-    import { onAuthStateChanged } from "../../node_modules/firebase/auth";
-    import { db, auth } from '../src/firebaseConfig.js';
-    import { getStorage, ref, uploadBytes, getDownloadURL } from "../../node_modules/firebase/storage";
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+<script type="module">
+  import { collection, getDocs, query, where, doc, setDoc } from "../../node_modules/firebase/firestore";
+  import { onAuthStateChanged } from "../../node_modules/firebase/auth";
+  import { db, auth } from '../src/firebaseConfig.js';
+  import { getStorage, ref, uploadBytes, getDownloadURL } from "../../node_modules/firebase/storage";
 
-    console.log("Initializing Firebase...");
+  console.log("Initializing Firebase...");
 
-    const storage = getStorage();
-    let cropper;
-    let isEditing = false;
+  const storage = getStorage();
+  let cropper;
+  let isEditing = false;
+  let currentUsername = '';
 
-    async function fetchUserData(userEmail) {
-      console.log("Fetching user data for email:", userEmail);
+  async function fetchUserData(userEmail) {
+    console.log("Fetching user data for email:", userEmail);
 
-      if (!userEmail) {
-        console.error("No user email found.");
-        return;
+    if (!userEmail) {
+      console.error("No user email found.");
+      return;
+    }
+
+    try {
+      const userQuery = query(collection(db, "users"), where("email", "==", userEmail));
+      const querySnapshot = await getDocs(userQuery);
+
+      if (!querySnapshot.empty) {
+        const userDoc = querySnapshot.docs[0];
+        const userData = userDoc.data();
+        currentUsername = userData.username;
+        console.log("User data fetched:", userData);
+        displayUserData(userData);
+        fetchUserPosts(userData.username); // Fetch posts after getting the username
+      } else {
+        console.error("User not found.");
       }
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  }
 
-      try {
-        const userQuery = query(collection(db, "users"), where("email", "==", userEmail));
-        const querySnapshot = await getDocs(userQuery);
+  function displayUserData(userData) {
+    document.getElementById("profile-username").textContent = userData.username || "No Username";
+    document.getElementById("profile-bio").textContent = userData.bio || "No Bio";
+    document.getElementById("profile-picture").src = userData.profilePic || '/images/default-avatar-icon-of-social-media-user-vector.jpg';
 
-        if (!querySnapshot.empty) {
-          const userDoc = querySnapshot.docs[0];
-          const userData = userDoc.data();
-          console.log("User data fetched:", userData);
-          displayUserData(userData);
-        } else {
-          console.error("User not found.");
+    const facebookLink = document.getElementById("social-facebook");
+    const twitterLink = document.getElementById("social-twitter");
+    const instagramLink = document.getElementById("social-instagram");
+
+    if (userData.facebook) {
+      facebookLink.href = userData.facebook;
+      facebookLink.style.display = "inline-block";
+    } else {
+      facebookLink.style.display = "none";
+    }
+
+    if (userData.twitter) {
+      twitterLink.href = userData.twitter;
+      twitterLink.style.display = "inline-block";
+    } else {
+      twitterLink.style.display = "none";
+    }
+
+    if (userData.instagram) {
+      instagramLink.href = userData.instagram;
+      instagramLink.style.display = "inline-block";
+    } else {
+      instagramLink.style.display = "none";
+    }
+
+    // Populate the form fields with the current user data
+    document.getElementById("username").value = userData.username || "";
+    document.getElementById("bio").value = userData.bio || "";
+    document.getElementById("facebook").value = userData.facebook || "";
+    document.getElementById("twitter").value = userData.twitter || "";
+    document.getElementById("instagram").value = userData.instagram || "";
+    document.getElementById("profilePicture").value = userData.profilePic || "";
+  }
+
+  function toggleEdit() {
+    isEditing = !isEditing;
+    document.getElementById('profileForm').style.display = isEditing ? 'block' : 'none';
+    document.getElementById('edit-button').textContent = isEditing ? 'Cancel' : 'Edit Profile';
+  }
+
+  document.getElementById('edit-button').addEventListener('click', toggleEdit);
+
+  document.getElementById('profileImageUpload').addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        document.getElementById('image-preview').src = e.target.result;
+        document.getElementById('crop-modal').style.display = 'block';
+        if (cropper) {
+          cropper.destroy();
         }
-      } catch (error) {
-        console.error("Error fetching user data:", error);
+        cropper = new Cropper(document.getElementById('image-preview'), {
+          aspectRatio: 1,
+          viewMode: 1,
+          background: false,
+        });
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  document.getElementById('crop-button').addEventListener('click', function() {
+    const canvas = cropper.getCroppedCanvas({
+      width: 150,
+      height: 150,
+    });
+    canvas.toBlob(async function(blob) {
+      const user = auth.currentUser;
+      if (user) {
+        const userId = user.uid;
+        const fileName = `profile_${userId}.png`;
+        const storageRef = ref(storage, `profile_pictures/${userId}/${fileName}`);
+        await uploadBytes(storageRef, blob);
+        const profilePicURL = await getDownloadURL(storageRef);
+        document.getElementById('profilePicture').value = profilePicURL;
+        document.getElementById('profile-picture').src = profilePicURL;
+        document.getElementById('crop-modal').style.display = 'none';
       }
+    }, 'image/png');
+  });
+
+  document.getElementById('close-crop-modal').addEventListener('click', function() {
+    document.getElementById('crop-modal').style.display = 'none';
+  });
+
+  async function fetchUserPosts(username) {
+    console.log("Fetching posts for user:", username);
+
+    try {
+      const postsQuery = query(collection(db, "posts"), where("Author", "==", username));
+      const querySnapshot = await getDocs(postsQuery);
+
+      const postsContainer = document.getElementById("profile-posts");
+      postsContainer.innerHTML = ""; // Clear loading text
+
+      if (querySnapshot.empty) {
+        postsContainer.innerHTML = "No Posts Yet!";
+      } else {
+        querySnapshot.forEach((doc) => {
+          const postData = doc.data();
+          const postElement = document.createElement("div");
+          postElement.classList.add("post-item");
+          postElement.innerHTML = `
+            <h3>${postData.title}</h3>
+            <p>${postData.content}</p>
+          `;
+          postsContainer.appendChild(postElement);
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching posts:", error);
     }
+  }
 
-    function displayUserData(userData) {
-      document.getElementById("profile-username").textContent = userData.username || "No Username";
-      document.getElementById("profile-bio").textContent = userData.bio || "No Bio";
-      document.getElementById("profile-picture").src = userData.profilePic || '/images/default-avatar-icon-of-social-media-user-vector.jpg';
-      document.getElementById("social-facebook").href = userData.facebook || "#";
-      document.getElementById("social-twitter").href = userData.twitter || "#";
-      document.getElementById("social-instagram").href = userData.instagram || "#";
+  async function updateUserData(event) {
+    event.preventDefault();
+    console.log("Updating user data...");
 
-      // Populate the form fields with the current user data
-      document.getElementById("username").value = userData.username || "";
-      document.getElementById("bio").value = userData.bio || "";
-      document.getElementById("facebook").value = userData.facebook || "";
-      document.getElementById("twitter").value = userData.twitter || "";
-      document.getElementById("instagram").value = userData.instagram || "";
+    const username = document.getElementById('username').value;
+    const bio = document.getElementById('bio').value;
+    const facebook = document.getElementById('facebook').value;
+    const twitter = document.getElementById('twitter').value;
+    const instagram = document.getElementById('instagram').value;
+    const profilePicture = document.getElementById('profilePicture').value;
+
+    try {
+      const user = auth.currentUser;
+      if (user) {
+        const userId = user.uid;
+        await setDoc(doc(db, 'users', userId), {
+          username,
+          bio,
+          facebook,
+          twitter,
+          instagram,
+          profilePic: profilePicture
+        }, { merge: true });
+
+        document.getElementById('profileSuccessMessage').textContent = 'Profile updated successfully!';
+        document.getElementById('profileErrorMessage').textContent = '';
+        console.log("Profile updated successfully.");
+        toggleEdit();
+      } else {
+        throw new Error('No user is signed in');
+      }
+    } catch (error) {
+      document.getElementById('profileErrorMessage').textContent = `Error updating profile: ${error.message}`;
+      document.getElementById('profileSuccessMessage').textContent = '';
+      console.error("Error updating profile:", error);
     }
+  }
 
-    function toggleEdit() {
-      isEditing = !isEditing;
-      document.getElementById('profileForm').style.display = isEditing ? 'block' : 'none';
-      document.getElementById('edit-button').textContent = isEditing ? 'Cancel' : 'Edit Profile';
-    }
-
-    document.getElementById('profileImageUpload').addEventListener('change', function(event) {
-      const file = event.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          document.getElementById('image-preview').src = e.target.result;
-          document.getElementById('crop-modal').style.display = 'block';
-          if (cropper) {
-            cropper.destroy();
-          }
-          cropper = new Cropper(document.getElementById('image-preview'), {
-            aspectRatio: 1,
-            viewMode: 1,
-            background: false,
-          });
-        };
-        reader.readAsDataURL(file);
+  window.addEventListener('DOMContentLoaded', () => {
+    console.log("Page loaded. Checking auth state...");
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const userEmail = user.email;
+        console.log("User is signed in:", user);
+        fetchUserData(userEmail);
+      } else {
+        console.error("No user is signed in.");
       }
     });
 
-    document.getElementById('crop-button').addEventListener('click', function() {
-      const canvas = cropper.getCroppedCanvas({
-        width: 150,
-        height: 150,
-      });
-      canvas.toBlob(async function(blob) {
-        const user = auth.currentUser;
-        if (user) {
-          const userId = user.uid;
-          const fileName = `profile_${userId}.png`;
-          const storageRef = ref(storage, `profile_pictures/${userId}/${fileName}`);
-          await uploadBytes(storageRef, blob);
-          const profilePicURL = await getDownloadURL(storageRef);
-          document.getElementById('profilePicture').value = profilePicURL;
-          document.getElementById('profile-picture').src = profilePicURL;
-          document.getElementById('crop-modal').style.display = 'none';
-        }
-      }, 'image/png');
-    });
-
-    document.getElementById('close-crop-modal').addEventListener('click', function() {
-      document.getElementById('crop-modal').style.display = 'none';
-    });
-
-    async function fetchUserPosts(userEmail) {
-      console.log("Fetching posts for user:", userEmail);
-
-      try {
-        const postsQuery = query(collection(db, "posts"), where("userEmail", "==", userEmail));
-        const querySnapshot = await getDocs(postsQuery);
-
-        const postsContainer = document.getElementById("profile-posts");
-        postsContainer.innerHTML = ""; // Clear loading text
-
-        if (querySnapshot.empty) {
-          postsContainer.innerHTML = "No Posts Yet!";
-        } else {
-          querySnapshot.forEach((doc) => {
-            const postData = doc.data();
-            const postElement = document.createElement("div");
-            postElement.classList.add("post-item");
-            postElement.innerHTML = `
-              <h3>${postData.title}</h3>
-              <p>${postData.content}</p>
-            `;
-            postsContainer.appendChild(postElement);
-          });
-        }
-      } catch (error) {
-        console.error("Error fetching posts:", error);
-      }
-    }
-
-    async function updateUserData(event) {
-      event.preventDefault();
-      console.log("Updating user data...");
-
-      const username = document.getElementById('username').value;
-      const bio = document.getElementById('bio').value;
-      const profilePicture = document.getElementById('profilePicture').value;
-      const facebook = document.getElementById('facebook').value;
-      const twitter = document.getElementById('twitter').value;
-      const instagram = document.getElementById('instagram').value;
-
-      try {
-        const user = auth.currentUser;
-        if (user) {
-          const userId = user.uid;
-          await setDoc(doc(db, 'users', userId), {
-            username,
-            bio,
-            profilePic: profilePicture,
-            facebook,
-            twitter,
-            instagram
-          }, { merge: true });
-
-          document.getElementById('profileSuccessMessage').textContent = 'Profile updated successfully!';
-          document.getElementById('profileErrorMessage').textContent = '';
-          console.log("Profile updated successfully.");
-
-          // Update displayed data
-          document.getElementById('profile-username').textContent = username;
-          document.getElementById('profile-bio').textContent = bio;
-          document.getElementById('profile-picture').src = profilePicture;
-          document.getElementById('social-facebook').href = facebook || "#";
-          document.getElementById('social-twitter').href = twitter || "#";
-          document.getElementById('social-instagram').href = instagram || "#";
-
-          // Exit edit mode
-          toggleEdit();
-        } else {
-          throw new Error('No user is signed in');
-        }
-      } catch (error) {
-        document.getElementById('profileErrorMessage').textContent = `Error updating profile: ${error.message}`;
-        document.getElementById('profileSuccessMessage').textContent = '';
-        console.error("Error updating profile:", error);
-      }
-    }
-
-    window.addEventListener('DOMContentLoaded', () => {
-      console.log("Page loaded. Checking auth state...");
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          const userEmail = user.email;
-          console.log("User is signed in:", user);
-          fetchUserData(userEmail);
-          fetchUserPosts(userEmail);
-        } else {
-          console.error("No user is signed in.");
-        }
-      });
-      document.getElementById('edit-button').addEventListener('click', toggleEdit);
-      document.getElementById('profileForm').addEventListener('submit', updateUserData);
-    });
-  </script>
+    document.getElementById('profileForm').addEventListener('submit', updateUserData);
+  });
+</script>
 
 </body>
 </html>

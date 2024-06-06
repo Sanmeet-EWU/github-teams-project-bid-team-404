@@ -85,7 +85,22 @@
   margin-top: 20px;
   display: flex;
   flex-direction: column;
+  gap: 20px;
+}
+
+#profileForm .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+#profileForm .form-group-row {
+  display: flex;
   gap: 10px;
+}
+
+#profileForm .form-group-row > div {
+  flex: 1;
 }
 
 #profileForm label {
