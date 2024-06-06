@@ -12,7 +12,7 @@ import "../styles/profile.css";
   <main class="profile-main">
     <div class="profile-header">
       <div class="profile-picture">
-        <img id="profile-picture" src="default-profile-pic.png" alt="Profile Picture">
+        <img id="profile-picture" src="/images/default-avatar-icon-of-social-media-user-vector.jpg" alt="Profile Picture">
       </div>
       <div class="profile-info">
         <h1 id="profile-username">No Username</h1>
@@ -25,10 +25,10 @@ import "../styles/profile.css";
       </div>
     </div>
     <div class="profile-stats">
-      <div class="stat-item">Posts <span id="posts-count">0</span></div>
-      <div class="stat-item">Comments <span id="comments-count">0</span></div>
-      <div class="stat-item">Suggestions <span id="suggestions-count">0</span></div>
-      <div class="stat-item">Like/Dislike <span id="likes-count">0</span></div>
+      <div class="stat-item">Posts<br><span id="posts-count">0</span></div>
+      <div class="stat-item">Comments<br><span id="comments-count">0</span></div>
+      <div class="stat-item">Suggestions<br><span id="suggestions-count">0</span></div>
+      <div class="stat-item">Like/Dislike<br><span id="likes-count">0</span></div>
     </div>
     <div class="profile-posts" id="profile-posts">
       Loading posts...
@@ -39,8 +39,6 @@ import "../styles/profile.css";
       <input type="text" id="username">
       <label for="bio">Bio</label>
       <textarea id="bio"></textarea>
-      <label for="profilePicture">Profile Picture URL</label>
-      <input type="text" id="profilePicture">
       <label for="profileImageUpload">Upload Profile Picture</label>
       <input type="file" id="profileImageUpload" accept="image/*">
       <label for="facebook">Facebook URL</label>
@@ -56,6 +54,18 @@ import "../styles/profile.css";
   </main>
   <Footer/>
 
+  <!-- Modal for Cropping Image -->
+  <div id="crop-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <span id="close-crop-modal" class="close">&times;</span>
+      <img id="image-preview" src="">
+      <button id="crop-button">Crop Image</button>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css"/>
+
   <script type="module">
     import { collection, getDocs, query, where, doc, setDoc } from "../../node_modules/firebase/firestore";
     import { onAuthStateChanged } from "../../node_modules/firebase/auth";
@@ -65,7 +75,7 @@ import "../styles/profile.css";
     console.log("Initializing Firebase...");
 
     const storage = getStorage();
-
+    let cropper;
     let isEditing = false;
 
     async function fetchUserData(userEmail) {
@@ -96,7 +106,7 @@ import "../styles/profile.css";
     function displayUserData(userData) {
       document.getElementById("profile-username").textContent = userData.username || "No Username";
       document.getElementById("profile-bio").textContent = userData.bio || "No Bio";
-      document.getElementById("profile-picture").src = userData.profilePic || 'default-profile-pic.png';
+      document.getElementById("profile-picture").src = userData.profilePic || '/images/default-avatar-icon-of-social-media-user-vector.jpg';
       document.getElementById("social-facebook").href = userData.facebook || "#";
       document.getElementById("social-twitter").href = userData.twitter || "#";
       document.getElementById("social-instagram").href = userData.instagram || "#";
@@ -104,7 +114,6 @@ import "../styles/profile.css";
       // Populate the form fields with the current user data
       document.getElementById("username").value = userData.username || "";
       document.getElementById("bio").value = userData.bio || "";
-      document.getElementById("profilePicture").value = userData.profilePic || "";
       document.getElementById("facebook").value = userData.facebook || "";
       document.getElementById("twitter").value = userData.twitter || "";
       document.getElementById("instagram").value = userData.instagram || "";
@@ -114,6 +123,79 @@ import "../styles/profile.css";
       isEditing = !isEditing;
       document.getElementById('profileForm').style.display = isEditing ? 'block' : 'none';
       document.getElementById('edit-button').textContent = isEditing ? 'Cancel' : 'Edit Profile';
+    }
+
+    document.getElementById('profileImageUpload').addEventListener('change', function(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById('image-preview').src = e.target.result;
+          document.getElementById('crop-modal').style.display = 'block';
+          if (cropper) {
+            cropper.destroy();
+          }
+          cropper = new Cropper(document.getElementById('image-preview'), {
+            aspectRatio: 1,
+            viewMode: 1,
+            background: false,
+          });
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    document.getElementById('crop-button').addEventListener('click', function() {
+      const canvas = cropper.getCroppedCanvas({
+        width: 150,
+        height: 150,
+      });
+      canvas.toBlob(async function(blob) {
+        const user = auth.currentUser;
+        if (user) {
+          const userId = user.uid;
+          const fileName = `profile_${userId}.png`;
+          const storageRef = ref(storage, `profile_pictures/${userId}/${fileName}`);
+          await uploadBytes(storageRef, blob);
+          const profilePicURL = await getDownloadURL(storageRef);
+          document.getElementById('profilePicture').value = profilePicURL;
+          document.getElementById('profile-picture').src = profilePicURL;
+          document.getElementById('crop-modal').style.display = 'none';
+        }
+      }, 'image/png');
+    });
+
+    document.getElementById('close-crop-modal').addEventListener('click', function() {
+      document.getElementById('crop-modal').style.display = 'none';
+    });
+
+    async function fetchUserPosts(userEmail) {
+      console.log("Fetching posts for user:", userEmail);
+
+      try {
+        const postsQuery = query(collection(db, "posts"), where("userEmail", "==", userEmail));
+        const querySnapshot = await getDocs(postsQuery);
+
+        const postsContainer = document.getElementById("profile-posts");
+        postsContainer.innerHTML = ""; // Clear loading text
+
+        if (querySnapshot.empty) {
+          postsContainer.innerHTML = "No Posts Yet!";
+        } else {
+          querySnapshot.forEach((doc) => {
+            const postData = doc.data();
+            const postElement = document.createElement("div");
+            postElement.classList.add("post-item");
+            postElement.innerHTML = `
+              <h3>${postData.title}</h3>
+              <p>${postData.content}</p>
+            `;
+            postsContainer.appendChild(postElement);
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching posts:", error);
+      }
     }
 
     async function updateUserData(event) {
@@ -131,22 +213,10 @@ import "../styles/profile.css";
         const user = auth.currentUser;
         if (user) {
           const userId = user.uid;
-
-          let profilePicURL = profilePicture;
-
-          // Handle profile image upload
-          const fileInput = document.getElementById('profileImageUpload');
-          if (fileInput.files.length > 0) {
-            const file = fileInput.files[0];
-            const storageRef = ref(storage, `profile_pictures/${userId}/${file.name}`);
-            await uploadBytes(storageRef, file);
-            profilePicURL = await getDownloadURL(storageRef);
-          }
-
           await setDoc(doc(db, 'users', userId), {
             username,
             bio,
-            profilePic: profilePicURL,
+            profilePic: profilePicture,
             facebook,
             twitter,
             instagram
@@ -159,7 +229,7 @@ import "../styles/profile.css";
           // Update displayed data
           document.getElementById('profile-username').textContent = username;
           document.getElementById('profile-bio').textContent = bio;
-          document.getElementById('profile-picture').src = profilePicURL;
+          document.getElementById('profile-picture').src = profilePicture;
           document.getElementById('social-facebook').href = facebook || "#";
           document.getElementById('social-twitter').href = twitter || "#";
           document.getElementById('social-instagram').href = instagram || "#";
@@ -183,6 +253,7 @@ import "../styles/profile.css";
           const userEmail = user.email;
           console.log("User is signed in:", user);
           fetchUserData(userEmail);
+          fetchUserPosts(userEmail);
         } else {
           console.error("No user is signed in.");
         }
