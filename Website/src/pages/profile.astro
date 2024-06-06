@@ -44,6 +44,7 @@ import "../styles/profile.css";
       font-size: 28px;
       font-weight: bold;
       cursor: pointer;
+      z-index: 2;
     }
     .close:hover,
     .close:focus {
@@ -63,6 +64,16 @@ import "../styles/profile.css";
     .profile-social a {
       margin: 0 10px;
       color: inherit;
+    }
+    .form-group {
+      position: relative;
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .form-group input,
+    .form-group textarea {
+      flex: 1;
     }
   </style>
 </head>
@@ -88,7 +99,7 @@ import "../styles/profile.css";
     <div class="stat-item">Posts<br><span id="posts-count">0</span></div>
     <div class="stat-item">Comments<br><span id="comments-count">0</span></div>
     <div class="stat-item">Suggestions<br><span id="suggestions-count">0</span></div>
-    <div class="stat-item">Like/Dislike<br><span id="likes-count">0</span></div>
+    <div class="stat-item">Likes<br><span id="likes-count">0</span></div>
   </div>
   <div class="profile-posts" id="profile-posts">
     No Posts Yet!
@@ -315,12 +326,12 @@ import "../styles/profile.css";
       if (user) {
         const userId = user.uid;
         await setDoc(doc(db, 'users', userId), {
-          username,
-          bio,
-          facebook,
-          twitter,
-          instagram,
-          profilePic: profilePicture
+          username: username || '',
+          bio: bio || '',
+          facebook: facebook || '',
+          twitter: twitter || '',
+          instagram: instagram || '',
+          profilePic: profilePicture || ''
         }, { merge: true });
 
         document.getElementById('profileSuccessMessage').textContent = 'Profile updated successfully!';
