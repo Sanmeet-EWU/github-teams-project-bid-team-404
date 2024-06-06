@@ -2,13 +2,20 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
+  
 }
 
 .create-browse-container {
-  background-color: #8A6340;
+  max-width: 820px; /*Good sizing on container*/
+  background-color: #14902A;
   padding: 20px;
+  padding-top:5px;
   border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  display:block; /*These couple of lines here and below*/
+  margin-left: auto; /*Center the blocks in browse*/
+  margin-right: auto;
+  margin-bottom: 50px; /*Magins so it looks nice*/
+  margin-top: 50px;
 }
 
 .create-browse-container label {
@@ -18,7 +25,8 @@
 
 .create-browse-container input,
 .create-browse-container textarea {
-  width: 100%;
+  width: 100%; /*Making the text boxes not be super long*/
+  max-width: 800px;
   padding: 8px;
   margin-bottom: 10px;
   border: 1px solid #ccc;

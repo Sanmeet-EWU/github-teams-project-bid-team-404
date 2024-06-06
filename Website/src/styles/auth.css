@@ -1,6 +1,6 @@
 .auth-main {
   display: flex;
-  justify-content: center;
+  justify-content: auto;
   align-items: center;
   flex-direction: column;
   padding: 20px;
@@ -49,4 +49,31 @@
   color: red;
   font-size: 14px;
   margin-top: 10px;
+}
+
+
+
+.signup-main{
+  display: flex;
+  justify-content: auto;
+  align-items: center;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.signup-container{
+  background-color: #14902A;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+}
+
+.signup-container label{
+  margin-bottom: 5px;
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  
 }
