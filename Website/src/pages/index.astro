@@ -4,7 +4,31 @@ import Footer from '../components/Footer.astro';
 import { fetchRecipes } from '../dataFetch';
 import BaseHead from '../components/BaseHead.astro';
 
-let recipes = await fetchRecipes();
+// Define the Recipe interface
+interface Recipe {
+  Author: string;
+  Title: string;
+  Image: string;
+  Instructions: string;
+  Ingredients: string[];
+  Tags: string[];
+  PrepTime: string;
+  CookTime: string;
+  Servings: string;
+  Slug: string;
+  Subtitle: string;
+}
+
+// Fetch recipes and cast them to an array of Recipe
+let recipes: Recipe[] = [];
+try {
+  const fetchedRecipes = await fetchRecipes();
+  recipes = fetchedRecipes as Recipe[];
+  console.log('Fetched recipes:', recipes); // Debugging
+} catch (error) {
+  console.error('Error fetching recipes:', error);
+  recipes = [];
+}
 ---
 
 <html lang="en">
@@ -22,6 +46,16 @@ let recipes = await fetchRecipes();
               <h2><a href={`/recipes/${recipe.Slug}`}>{recipe.Title}</a></h2>
               <p>Chef {recipe.Author}</p>
               <p>{recipe.Subtitle}</p>
+              <div class="recipe-meta">
+                <span>Prep Time: {recipe.PrepTime} min</span>
+                <span>Cook Time: {recipe.CookTime} min</span>
+                <span>Servings: {recipe.Servings}</span>
+              </div>
+              <div class="recipe-tags">
+                {(recipe.Tags || []).map(tag => (
+                  <span class="tag">{tag}</span>
+                ))}
+              </div>
             </div>
           </article>
         ))
