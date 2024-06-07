@@ -14,13 +14,13 @@
   align-items: center;
   justify-content: space-between;
   max-width: 1200px; /* Limit the max width */
-  margin: 0 auto; /* Center the container */
+  margin:  auto; /* Center the container */
   width: 100%;
   padding: 0 20px; /* Add some horizontal padding */
 }
 
 .logo img {
-  height: 103px; /* Ensure the logo height is consistent | Changed to 103 for a more fit look*/
+  height: 100.5px; /* Ensure the logo height is consistent | Changed to 103 for a more fit look*/
   width: auto;
 }
 
@@ -47,11 +47,12 @@
   background-color: #14902A; /* Green color for the Create Post button */
   color: white;
   border: none;
-  padding: 10px 15px;
-  border-radius: 5px;
+  border-radius: 10px;
   cursor: pointer;
   height: 40px; /* Adjust to match button height */
   margin: auto 0; /* Center the button vertically */
+  padding:10px;
+  text-align:center;
 }
 
 .search-container {
@@ -84,7 +85,7 @@
   padding: 10px 15px;
   border-radius: 10px;
   cursor: pointer;
-  height: 20px; /* Adjust to match button height */
+  height: 35px; /* Adjust to match button height */
   margin: auto 0; /* Center the button vertically */
 }
 
