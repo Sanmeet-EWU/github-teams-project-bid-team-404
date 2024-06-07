@@ -13,43 +13,26 @@ import "../styles/createPost.css"
     <h1>Create a Recipe Post</h1>
     <div class="create-post-container">
       <form id="createPostForm">
-        <label for="title">Title</label>
-        <input type="text" id="title" required />
-
-        <label for="author">Author</label>
-        <input type="text" id="author" required />
-
-        <label for="image">Image URL</label>
-        <input type="text" id="image" required />
-
-        <label for="instructions">Instructions</label>
-        <textarea id="instructions" required></textarea>
-
-        <label for="ingredients">Ingredients (comma-separated)</label>
-        <input type="text" id="ingredients" required />
-
-        <label for="prepTime">Prep Time</label>
-        <input type="text" id="prepTime" required />
-
-        <label for="cookTime">Cook Time</label>
-        <input type="text" id="cookTime" required />
-
-        <label for="servings">Servings</label>
-        <input type="text" id="servings" required />
-
-        <label for="tags">Tags (comma-separated)</label>
-        <input type="text" id="tags" required />
-
-        <label for="subtitle">Subtitle</label>
-        <input type="text" id="subtitle" required />
-
+        <input id="title" type="text" placeholder="Title" required />
+        <input id="author" type="text" placeholder="Author" required />
+        <input id="image" type="text" placeholder="Image URL" required />
+        <textarea id="instructions" placeholder="Instructions" required></textarea>
+        <input id="ingredients" type="text" placeholder="Ingredients (comma separated)" required />
+        <input id="prepTime" type="text" placeholder="Prep Time" required />
+        <input id="cookTime" type="text" placeholder="Cook Time" required />
+        <input id="servings" type="number" placeholder="Servings" required />
+        <input id="tags" type="text" placeholder="Tags (comma separated)" required />
+        <input id="subtitle" type="text" placeholder="Subtitle" required />
         <button type="submit">Create Post</button>
+        <p id="createPostErrorMessage"></p>
+        <p id="createPostSuccessMessage"></p>
       </form>
+      
       <p class="error" id="createPostErrorMessage"></p>
       <p class="success" id="createPostSuccessMessage"></p>
     </div>
   </main>
   <Footer />
-  <script type="module" src="../scripts/createPost.js"></script>
+  <script src="../scripts/createPost.js"></script>
 </body>
 </html>

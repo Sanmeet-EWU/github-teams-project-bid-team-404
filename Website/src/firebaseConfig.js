@@ -1,6 +1,5 @@
-// src/firebaseConfig.js
-import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import { initializeApp, getApps, getApp } from "firebase/app";
+import { getFirestore, collection, getDocs } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
@@ -13,6 +12,17 @@ const firebaseConfig = {
   measurementId: import.meta.env.PUBLIC_FIREBASE_MEASUREMENT_ID
 };
 
+// Initialize Firebase
+let app;
+if (!getApps().length) {
+  app = initializeApp(firebaseConfig);
+} else {
+  app = getApp();
+}
+
+// Initialize Firebase services
+const db = getFirestore(app);
+const auth = getAuth(app);
 
 export async function fetchRecipes() {
   try {
@@ -33,9 +43,6 @@ export async function fetchRecipes() {
     return [];
   }
 }
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const auth = getAuth(app);
+
 export default app;
-export { db, auth};
+export { db, auth };
