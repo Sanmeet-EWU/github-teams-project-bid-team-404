@@ -93,61 +93,9 @@ html, body {
 	background-color: #14902A; /* Green background color */
 	border-radius: 10px;
 	overflow: hidden;
-	width: 100%;
-	max-width: 900px;
-	margin: 20px auto; /* Center the cards and add spacing between them */
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a subtle shadow for better aesthetics */
-	transition: transform 0.2s ease; /* Add a smooth hover effect */
-  }
-  
-  .recipe-card:hover {
-	transform: scale(1.05); /* Slightly enlarge the card on hover */
-  }
-  
-  .recipe-image {
-	width: 40%;
-	object-fit: cover; /* Ensure the image covers the area without distortion */
-  }
-  
-  .recipe-content {
-	padding: 20px;
-	width: 60%;
-  }
-  
-  .recipe-content h2 {
-	color: #1a73e8; /* Blue color for the title */
-	margin-bottom: 10px;
-	font-size: 24px;
-  }
-  
-  .recipe-content p {
-	margin: 5px 0;
-  }
-  
-  .recipe-meta {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	margin-top: 10px;
-  } 
-  
-  .recipe-meta span {
-	font-size: 14px;
-	color: #ffffff;
-  }
-  
-  .recipe-tags {
-	margin-top: 15px;
-  }
-  
-  .recipe-tags .tag {
-	display: inline-block;
-	background-color: #ff4081; /* Pink background for the tags */
-	color: #ffffff;
-	border-radius: 3px;
-	padding: 3px 8px;
-	margin-right: 5px;
-	font-size: 12px;
+	width: 1000%;
+	max-width: 900px; /* Increased max-width */
+	margin: 20px; /* Center the cards and add spacing between them */
   }
   
   /* Additional styles for better layout */
