@@ -11,71 +11,6 @@ import "../styles/profile.css";
   <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/fontawesome.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/js/all.min.js"></script>
-  <style>
-    /* Modal styles */
-    .modal {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: fixed;
-      z-index: 1;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      overflow: auto;
-      background-color: rgba(0, 0, 0, 0.5);
-    }
-    .modal-content {
-      background-color: white;
-      padding: 20px;
-      border: 1px solid #888;
-      width: 80%;
-      max-width: 500px;
-      border-radius: 10px;
-      text-align: center;
-      position: relative;
-    }
-    .close {
-      color: #aaa;
-      position: absolute;
-      top: 10px;
-      right: 20px;
-      font-size: 28px;
-      font-weight: bold;
-      cursor: pointer;
-      z-index: 2;
-    }
-    .close:hover,
-    .close:focus {
-      color: black;
-      text-decoration: none;
-    }
-    .crop-container {
-      width: 100%;
-      height: auto;
-      margin-bottom: 10px;
-    }
-    #image-preview {
-      max-width: 100%;
-      max-height: 400px;
-      object-fit: contain;
-    }
-    .profile-social a {
-      margin: 0 10px;
-      color: inherit;
-    }
-    .form-group {
-      position: relative;
-      display: flex;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-    .form-group input,
-    .form-group textarea {
-      flex: 1;
-    }
-  </style>
 </head>
 <body>
 
@@ -101,8 +36,11 @@ import "../styles/profile.css";
     <div class="stat-item">Suggestions<br><span id="suggestions-count">0</span></div>
     <div class="stat-item">Likes<br><span id="likes-count">0</span></div>
   </div>
-  <div class="profile-posts" id="profile-posts">
-    No Posts Yet!
+  <div class="profile-posts">
+    <h2>Your Recipes</h2>
+    <div class="profile-recipes" id="profile-recipes">
+      No Posts Yet!
+    </div>
   </div>
   <button id="edit-button">Edit Profile</button>
   <form id="profileForm" style="display: none;">
@@ -285,25 +223,44 @@ import "../styles/profile.css";
     console.log("Fetching posts for user:", username);
 
     try {
-      const postsQuery = query(collection(db, "posts"), where("Author", "==", username));
+      const postsQuery = query(collection(db, "recipes"), where("Author", "==", username));
       const querySnapshot = await getDocs(postsQuery);
 
-      const postsContainer = document.getElementById("profile-posts");
+      const postsContainer = document.getElementById("profile-recipes");
+      const postsCount = document.getElementById("posts-count");
       postsContainer.innerHTML = ""; // Clear loading text
 
       if (querySnapshot.empty) {
         postsContainer.innerHTML = "No Posts Yet!";
+        postsCount.textContent = "0";
       } else {
+        let postCount = 0;
         querySnapshot.forEach((doc) => {
+          postCount++;
           const postData = doc.data();
+          console.log("Post data:", postData); // Add logging here
           const postElement = document.createElement("div");
-          postElement.classList.add("post-item");
+          postElement.classList.add("recipe-card");
           postElement.innerHTML = `
-            <h3>${postData.title}</h3>
-            <p>${postData.content}</p>
+            <img src="${postData.Image}" alt="Recipe Image">
+            <div class="recipe-card-content">
+              <div class="recipe-card-title">${postData.Title}</div>
+              <div class="recipe-card-subtitle">Chef ${postData.Author}</div>
+              <div class="recipe-card-tags">
+                ${postData.Tags?.map(tag => `<span class="recipe-card-tag">${tag}</span>`).join('') || ''}
+              </div>
+              <p>${postData.Subtitle || ''}</p>
+              <p>Prep Time: ${postData.PrepTime || 'N/A'}</p>
+              <p>Cook Time: ${postData.CookTime || 'N/A'}</p>
+              <p>Servings: ${postData.Servings || 'N/A'}</p>
+            </div>
           `;
+          postElement.addEventListener('click', () => {
+            window.location.href = `/recipes/${postData.Slug}`;
+          });
           postsContainer.appendChild(postElement);
         });
+        postsCount.textContent = postCount.toString();
       }
     } catch (error) {
       console.error("Error fetching posts:", error);
@@ -338,6 +295,7 @@ import "../styles/profile.css";
         document.getElementById('profileErrorMessage').textContent = '';
         console.log("Profile updated successfully.");
         toggleEdit();
+        fetchUserPosts(username); // Refetch posts with the new username
       } else {
         throw new Error('No user is signed in');
       }
