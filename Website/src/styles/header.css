@@ -20,7 +20,7 @@
 }
 
 .logo img {
-  height: 100.5px; /* Ensure the logo height is consistent | Changed to 103 for a more fit look*/
+  height: 100px; /* Ensure the logo height is consistent | Changed to 103 for a more fit look*/
   width: auto;
 }
 
@@ -100,8 +100,8 @@
   padding: 20px; /* Add some padding */
 }
 
-.green-bar {
+.green-bar {/* green bar is now yellow deal with it. >:) */
   width: 100%;
-  height: 20px; /* Adjust the height of the green bar */
-  background-color: #14902A; /* Green color for the bar */
+  height: 10px; /* Adjust the height of the green bar, was 20px */
+  background-color: #e5b720; /* Green color for the bar */
 }
