@@ -28,3 +28,6 @@ BiteShare is more than just a recipe site; it's a place where cooks can share th
 - **Database**: Choice of [Firebase](https://firebase.google.com/) for efficient data management.
 - **Design**: Prototyping with [Figma](https://www.figma.com/) for a collaborative design approach. [Figma Project Board](https://www.figma.com/design/mZK5MDttDAjN6u0y2jLsvX/CSCD350-Project-Board?node-id=0%3A1&t=NJCGsHXfB2AsfG67-1)
 - **Deployment**: Static assets hosted on [Netlify](https://www.netlify.com/) for optimized delivery.
+
+## Demo Video
+https://www.youtube.com/watch?v=iFWweoAlQq0
