@@ -289,15 +289,13 @@ import "../styles/profile.css";
           console.log("Comment data:", commentData); // Add logging here
           const commentElement = document.createElement("div");
           commentElement.classList.add("comment-card");
-
-          const postDoc = await getDoc(doc(db, "recipes", commentData.postId));
-          const postData = postDoc.data();
-          const postTitle = postData ? postData.Title : "Unknown Post";
-
+          commentElement.addEventListener('click', () => {
+            window.location.href = `/recipes/${commentData.postId}`;
+          });
           commentElement.innerHTML = `
             <div class="comment-card-content">
               <p>${commentData.comment}</p>
-              <p><a href="/recipes/${commentData.postId}">${postTitle}</a></p>
+              <p><a href="/recipes/${commentData.postId}">View Recipe</a></p>
             </div>
           `;
           commentsContainer.appendChild(commentElement);

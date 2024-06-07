@@ -1,5 +1,6 @@
+/* Profile Styles */
 .profile-main {
-  max-width: 1200px;
+  max-width: 900px; /* Increased max-width to accommodate wider recipe cards */
   margin: 0 auto;
   padding: 20px;
 }
@@ -47,26 +48,20 @@
   font-size: 16px;
 }
 
-.content-container {
-  display: flex;
-  gap: 20px;
-}
-
-.content-column {
-  flex: 1;
-}
-
-.profile-posts {
+.profile-posts,
+.profile-comments {
   margin-top: 20px;
 }
 
 .profile-recipes,
-.profile-comments {
-  max-height: 400px;
+#profile-comments {
+  max-height: 500px; /* Adjusted for better fit */
   overflow-y: auto;
   border: 1px solid #ddd;
   border-radius: 10px;
   padding: 10px;
+  width: 100%; /* Ensure full width */
+  box-sizing: border-box; /* Include padding in the element's total width and height */
 }
 
 .recipe-card,
@@ -77,11 +72,13 @@
   border: 1px solid #ddd;
   border-radius: 10px;
   overflow: hidden;
-  cursor: pointer;
-  padding: 10px;
+  background-color: green; /* Use the same background color for both cards */
+  width: 100%; /* Ensure full width */
+  box-sizing: border-box; /* Include padding and border in the element's total width and height */
 }
 
-.recipe-card img {
+.recipe-card img,
+.comment-card img {
   width: 150px;
   height: 150px;
   object-fit: cover;
@@ -117,6 +114,13 @@
   padding: 2px 5px;
   border-radius: 3px;
   font-size: 12px;
+}
+
+.comment-card-content a {
+  font-size: 18px;
+  font-weight: bold;
+  color: inherit; /* Matches the text color */
+  text-decoration: none; /* Removes the underline */
 }
 
 button#edit-button {
