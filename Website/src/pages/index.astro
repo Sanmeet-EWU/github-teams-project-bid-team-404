@@ -5,7 +5,19 @@ import { fetchRecipes } from '../dataFetch';
 import BaseHead from '../components/BaseHead.astro';
 
 // Define the Recipe interface
-
+interface Recipe {
+  Author: string;
+  Title: string;
+  Image: string;
+  Instructions: string;
+  Ingredients: string[];
+  Tags: string[];
+  PrepTime: string;
+  CookTime: string;
+  Servings: string;
+  Slug: string;
+  Subtitle: string;
+}
 
 // Fetch recipes and cast them to an array of Recipe
 let recipes: Recipe[] = [];
@@ -31,7 +43,7 @@ try {
           <article class="recipe-card">
             <img src={recipe.Image} alt={recipe.Title} class="recipe-image" />
             <div class="recipe-content">
-              <h2><a href={`/recipes/${recipe.Slug}`}>{recipe.Title}</a></h2>
+              <h2><a href={`/recipes/${recipe.Slug}`} class="recipe-title">{recipe.Title}</a></h2>
               <p>Chef {recipe.Author}</p>
               <p>{recipe.Subtitle}</p>
               <div class="recipe-meta">
