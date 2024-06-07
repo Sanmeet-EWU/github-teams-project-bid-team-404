@@ -101,6 +101,20 @@ import { testLab } from 'firebase-functions';
             htmlCode += "<h2><a href=/recipes/" + json[recipe].Slug + ">" + json[recipe].Title + "</a></h2>";
             htmlCode += "<p>Chef " + json[recipe].Author + "</p>";
             htmlCode += "<p>" + json[recipe].Subtitle + "</p>";
+            //New stuff
+            htmlCode += "<div class=\"recipe-meta\">";
+              htmlCode += "<span>Prep Time: " + json[recipe].PrepTime + " min</span>";
+              htmlCode += "<span>Cook Time: " + json[recipe].CookTime + " min</span>";
+              htmlCode += "<span>Servings: " + json[recipe].Servings + " min</span>";
+            htmlCode += "</div>";
+            htmlCode += "<div class=\"recipe-tags\">";
+
+              json[recipe].Tags.forEach(tag => {
+                htmlCode +=  "<span class=\"tag\">" + tag + "</span>";
+              });
+              
+            htmlCode += "</div>";
+            //End of New stuff
           htmlCode += "</div>";
         htmlCode += "</article>";
       }
