@@ -1,5 +1,5 @@
 .profile-main {
-  max-width: 800px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
 }
@@ -47,11 +47,21 @@
   font-size: 16px;
 }
 
+.content-container {
+  display: flex;
+  gap: 20px;
+}
+
+.content-column {
+  flex: 1;
+}
+
 .profile-posts {
   margin-top: 20px;
 }
 
-.profile-recipes {
+.profile-recipes,
+.profile-comments {
   max-height: 400px;
   overflow-y: auto;
   border: 1px solid #ddd;
@@ -59,7 +69,8 @@
   padding: 10px;
 }
 
-.recipe-card {
+.recipe-card,
+.comment-card {
   display: flex;
   align-items: flex-start;
   margin-bottom: 15px;
@@ -67,6 +78,7 @@
   border-radius: 10px;
   overflow: hidden;
   cursor: pointer;
+  padding: 10px;
 }
 
 .recipe-card img {
@@ -75,17 +87,20 @@
   object-fit: cover;
 }
 
-.recipe-card-content {
+.recipe-card-content,
+.comment-card-content {
   padding: 10px;
   flex: 1;
 }
 
-.recipe-card-title {
+.recipe-card-title,
+.comment-card-title {
   font-size: 18px;
   font-weight: bold;
 }
 
-.recipe-card-subtitle {
+.recipe-card-subtitle,
+.comment-card-subtitle {
   font-size: 14px;
   color: #888;
 }

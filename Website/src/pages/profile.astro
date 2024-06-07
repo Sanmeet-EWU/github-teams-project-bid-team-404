@@ -42,6 +42,12 @@ import "../styles/profile.css";
       No Posts Yet!
     </div>
   </div>
+  <div class="profile-comments">
+    <h2>Your Comments</h2>
+    <div id="profile-comments">
+      No Comments Yet!
+    </div>
+  </div>
   <button id="edit-button">Edit Profile</button>
   <form id="profileForm" style="display: none;">
     <div class="form-group">
@@ -89,7 +95,7 @@ import "../styles/profile.css";
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
 <script type="module">
-  import { collection, getDocs, query, where, doc, setDoc } from "../../node_modules/firebase/firestore";
+  import { collection, getDocs, query, where, doc, setDoc, getDoc } from "../../node_modules/firebase/firestore";
   import { onAuthStateChanged } from "../../node_modules/firebase/auth";
   import { db, auth } from '../src/firebaseConfig.js';
   import { getStorage, ref, uploadBytes, getDownloadURL } from "../../node_modules/firebase/storage";
@@ -99,7 +105,7 @@ import "../styles/profile.css";
   const storage = getStorage();
   let cropper;
   let isEditing = false;
-  let currentUsername = '';
+  let currentUserId = '';
 
   async function fetchUserData(userEmail) {
     console.log("Fetching user data for email:", userEmail);
@@ -116,10 +122,11 @@ import "../styles/profile.css";
       if (!querySnapshot.empty) {
         const userDoc = querySnapshot.docs[0];
         const userData = userDoc.data();
-        currentUsername = userData.username;
+        currentUserId = userDoc.id;
         console.log("User data fetched:", userData);
         displayUserData(userData);
-        fetchUserPosts(userData.username); // Fetch posts after getting the username
+        fetchUserPosts(currentUserId); // Fetch posts after getting the user ID
+        fetchUserComments(currentUserId); // Fetch comments after getting the user ID
       } else {
         console.error("User not found.");
       }
@@ -219,51 +226,87 @@ import "../styles/profile.css";
     document.getElementById('crop-modal').style.display = 'none';
   });
 
-  async function fetchUserPosts(username) {
-    console.log("Fetching posts for user:", username);
+  async function fetchUserPosts(userId) {
+    console.log("Fetching posts for user:", userId);
 
     try {
-      const postsQuery = query(collection(db, "recipes"), where("Author", "==", username));
+      const postsQuery = query(collection(db, "recipes"), where("AuthorId", "==", userId));
       const querySnapshot = await getDocs(postsQuery);
 
       const postsContainer = document.getElementById("profile-recipes");
-      const postsCount = document.getElementById("posts-count");
       postsContainer.innerHTML = ""; // Clear loading text
 
       if (querySnapshot.empty) {
         postsContainer.innerHTML = "No Posts Yet!";
-        postsCount.textContent = "0";
       } else {
-        let postCount = 0;
         querySnapshot.forEach((doc) => {
-          postCount++;
           const postData = doc.data();
           console.log("Post data:", postData); // Add logging here
           const postElement = document.createElement("div");
           postElement.classList.add("recipe-card");
+          postElement.addEventListener('click', () => {
+            window.location.href = `/recipes/${postData.Slug}`;
+          });
           postElement.innerHTML = `
             <img src="${postData.Image}" alt="Recipe Image">
             <div class="recipe-card-content">
               <div class="recipe-card-title">${postData.Title}</div>
               <div class="recipe-card-subtitle">Chef ${postData.Author}</div>
               <div class="recipe-card-tags">
-                ${postData.Tags?.map(tag => `<span class="recipe-card-tag">${tag}</span>`).join('') || ''}
+                ${postData.Tags.map(tag => `<span class="recipe-card-tag">${tag}</span>`).join('')}
               </div>
-              <p>${postData.Subtitle || ''}</p>
-              <p>Prep Time: ${postData.PrepTime || 'N/A'}</p>
-              <p>Cook Time: ${postData.CookTime || 'N/A'}</p>
-              <p>Servings: ${postData.Servings || 'N/A'}</p>
+              <p>${postData.Subtitle}</p>
+              <p>Prep Time: ${postData.PrepTime}</p>
+              <p>Cook Time: ${postData.CookTime}</p>
+              <p>Servings: ${postData.Servings}</p>
             </div>
           `;
-          postElement.addEventListener('click', () => {
-            window.location.href = `/recipes/${postData.Slug}`;
-          });
           postsContainer.appendChild(postElement);
         });
-        postsCount.textContent = postCount.toString();
       }
+
+      document.getElementById("posts-count").textContent = querySnapshot.size; // Update the posts count
     } catch (error) {
       console.error("Error fetching posts:", error);
+    }
+  }
+
+  async function fetchUserComments(userId) {
+    console.log("Fetching comments for user:", userId);
+
+    try {
+      const commentsQuery = query(collection(db, "comments"), where("userId", "==", userId));
+      const querySnapshot = await getDocs(commentsQuery);
+
+      const commentsContainer = document.getElementById("profile-comments");
+      commentsContainer.innerHTML = ""; // Clear loading text
+
+      if (querySnapshot.empty) {
+        commentsContainer.innerHTML = "No Comments Yet!";
+      } else {
+        querySnapshot.forEach(async (doc) => {
+          const commentData = doc.data();
+          console.log("Comment data:", commentData); // Add logging here
+          const commentElement = document.createElement("div");
+          commentElement.classList.add("comment-card");
+
+          const postDoc = await getDoc(doc(db, "recipes", commentData.postId));
+          const postData = postDoc.data();
+          const postTitle = postData ? postData.Title : "Unknown Post";
+
+          commentElement.innerHTML = `
+            <div class="comment-card-content">
+              <p>${commentData.comment}</p>
+              <p><a href="/recipes/${commentData.postId}">${postTitle}</a></p>
+            </div>
+          `;
+          commentsContainer.appendChild(commentElement);
+        });
+      }
+
+      document.getElementById("comments-count").textContent = querySnapshot.size; // Update the comments count
+    } catch (error) {
+      console.error("Error fetching comments:", error);
     }
   }
 
@@ -295,7 +338,8 @@ import "../styles/profile.css";
         document.getElementById('profileErrorMessage').textContent = '';
         console.log("Profile updated successfully.");
         toggleEdit();
-        fetchUserPosts(username); // Refetch posts with the new username
+        fetchUserPosts(userId); // Refetch posts with the new user ID
+        fetchUserComments(userId); // Refetch comments with the user ID
       } else {
         throw new Error('No user is signed in');
       }
