@@ -142,7 +142,7 @@ html, body {
   
   .recipe-tags .tag {
 	display: inline-block;
-	background-color: #ff4081; /* Pink background for the tags */
+	background-color: #133d6d; /* Pink background for the tags */
 	color: #ffffff;
 	border-radius: 3px;
 	padding: 3px 8px;
@@ -216,6 +216,4 @@ html, body {
   .home-main h1 {
 	margin-bottom: 20px;
 	font-size: 3em; /* Increase font size | Modified to 3*/
-	background-color: #045213;
-	
   }
