@@ -5,7 +5,8 @@
   }
   
   .create-post-container {
-    background-color: #8A6340;
+    max-width: 820px;
+    background-color: #14902A;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -18,7 +19,7 @@
   
   .create-post-container input,
   .create-post-container textarea {
-    width: 100%;
+    width: 98%;
     padding: 8px;
     margin-bottom: 10px;
     border: 1px solid #ccc;
