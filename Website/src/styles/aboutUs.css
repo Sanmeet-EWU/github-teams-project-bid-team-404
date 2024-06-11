@@ -62,4 +62,35 @@
     border-radius: 5px;
     cursor: pointer;
   }
+
+
+  .about-header{
+    background-color: #391490;
+    text-align: center;
+    width: 150px;
+    border-radius: 10px;
+  }
+
+  .us-section{
+    text-align: center;
+    background-color: #2525259a;
+    border-radius: 20px;
+    width: 900px;
+  }
+
+  .us-section h1{
+    float: center;
+    text-align: center;
+  }
   
+  .bio{
+    padding-top: 20px;
+    padding-bottom: 20px;
+    text-align: center;
+  }
+
+  .pic{
+    border-style:ridge;
+    border-color: #e5b720;
+    border-radius: 10px;
+  }
