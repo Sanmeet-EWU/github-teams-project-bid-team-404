@@ -31,3 +31,12 @@ BiteShare is more than just a recipe site; it's a place where cooks can share th
 
 ## Demo Video
 https://www.youtube.com/watch?v=iFWweoAlQq0
+
+##How to run
+Currently this only runs locally on a live server. You'll need a Firebase DB setup and you'll need to create a .env file with the Firebase DB credentials. You will also need NPM installed on your local machine, and it helps to have the astro extension. I would reccommend using VSCode.
+
+To run:
+1. Navigate to the "Website" folder
+2. Run "npm install" in your respective terminal
+3. Run "npm run dev" in your respective terminal
+4. Open your live server address
