@@ -40,3 +40,8 @@ To run:
 2. Run "npm install" in your respective terminal
 3. Run "npm run dev" in your respective terminal
 4. Open your live server address
+
+## Dev Docs
+* The "Website" directory contains the bulk of the website
+* The "Functions" directory contains some firebase functions
+* The "src" directory contains the client side functions and the front end of the website
